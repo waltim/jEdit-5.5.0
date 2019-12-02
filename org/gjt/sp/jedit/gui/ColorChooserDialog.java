@@ -86,14 +86,7 @@ public class ColorChooserDialog extends JDialog
         );
         JButton reset = new JButton(jEdit.getProperty("common.reset"));
         reset.addActionListener( 
-            new ActionListener() 
-            {
-                public void actionPerformed( ActionEvent ae ) 
-                {
-                    colorChooser.setColor(initialColor);
-                }
-            }
-        );
+            (ActionEvent ae )->{ colorChooser.setColor(initialColor);});
         GenericGUIUtilities.makeSameSize(ok, cancel, reset);
 
         buttonPanel.add(Box.createGlue());

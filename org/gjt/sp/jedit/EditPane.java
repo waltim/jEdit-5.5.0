@@ -191,19 +191,12 @@ public class EditPane extends JPanel implements BufferSetListener
 
 		if (requestFocus)
 		{
-			SwingUtilities.invokeLater(new Runnable()
-			{
-				public void run()
-				{
-					// only do this if we are the current edit pane
-					if(view.getEditPane() == EditPane.this
+			SwingUtilities.invokeLater(()-> { if(view.getEditPane() == EditPane.this
 						&& (bufferSwitcher == null
 						|| !bufferSwitcher.isPopupVisible()))
 					{
 						textArea.requestFocus();
-					}
-				}
-			});
+					}});
 		}
 
 		// If the buffer is loading, the caret info will be loaded on
@@ -270,13 +263,7 @@ public class EditPane extends JPanel implements BufferSetListener
 	 */
 	public void focusOnTextArea()
 	{
-		SwingUtilities.invokeLater(new Runnable()
-		{
-			public void run()
-			{
-				textArea.requestFocus();
-			}
-		});
+		SwingUtilities.invokeLater(()-> { textArea.requestFocus();});
 	} //}}}
 
 	//{{{ getTextArea() method

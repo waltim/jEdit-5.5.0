@@ -2044,13 +2044,7 @@ public class Buffer extends JEditBuffer
 
 			// show this message when all I/O requests are
 			// complete
-			AwtRunnableQueue.INSTANCE.runAfterIoTasks(new Runnable()
-			{
-				public void run()
-				{
-					GUIUtilities.message(view,"autosave-loaded",args);
-				}
-			});
+			AwtRunnableQueue.INSTANCE.runAfterIoTasks(()-> { GUIUtilities.message(view,"autosave-loaded",args);});
 
 			return true;
 		}

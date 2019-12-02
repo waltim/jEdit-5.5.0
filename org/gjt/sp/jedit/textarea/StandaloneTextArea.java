@@ -541,13 +541,7 @@ public class StandaloneTextArea extends TextArea
 		final Properties props = new Properties();
 		props.putAll(loadProperties("/keymaps/jEdit_keys.props"));
 		props.putAll(loadProperties("/org/gjt/sp/jedit/jedit.props"));
-		StandaloneTextArea textArea = new StandaloneTextArea(new IPropertyManager()
-		{
-			public String getProperty(String name)
-			{
-				return props.getProperty(name);
-			}
-		});
+		StandaloneTextArea textArea = new StandaloneTextArea((String name)->{ return props.getProperty(name);});
 		textArea.getBuffer().setProperty("folding", "explicit");
 		return textArea;
 	} // }}}

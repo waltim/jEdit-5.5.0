@@ -150,23 +150,11 @@ class HyperSearchRequest extends Task
 		catch(final Exception e)
 		{
 			Log.log(Log.ERROR,this,e);
-			ThreadUtilities.runInDispatchThread(new Runnable()
-			{
-				public void run()
-				{
-					SearchAndReplace.handleError(view,e);
-				}
-			});
+			ThreadUtilities.runInDispatchThread(()-> { SearchAndReplace.handleError(view,e);});
 		}
 		finally
 		{
-			ThreadUtilities.runInDispatchThread(new Runnable()
-			{
-				public void run()
-				{
-					results.searchDone(rootSearchNode, selectNode);
-				}
-			});
+			ThreadUtilities.runInDispatchThread(()-> { results.searchDone(rootSearchNode, selectNode);});
 		}
 	} //}}}
 

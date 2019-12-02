@@ -133,11 +133,7 @@ public class FloatingWindowContainer extends JFrame implements DockableWindowCon
 			setTitle(entry.longTitle());
 			toFront();
 			requestFocus();
-			SwingUtilities.invokeLater(new Runnable()
-			{
-				public void run()
-				{
-					if(entry.win instanceof DefaultFocusComponent)
+			SwingUtilities.invokeLater(()-> { if(entry.win instanceof DefaultFocusComponent)
 					{
 						((DefaultFocusComponent)entry.win)
 							.focusOnDefaultComponent();
@@ -145,9 +141,7 @@ public class FloatingWindowContainer extends JFrame implements DockableWindowCon
 					else
 					{
 						entry.win.requestFocus();
-					}
-				}
-			});
+					}});
 		}
 	} //}}}
 

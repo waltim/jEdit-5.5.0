@@ -178,11 +178,7 @@ public class VFSFileChooserDialog extends EnhancedDialog
 
 		ThreadUtilities.runInBackground(new GetFileTypeRequest(
 			vfs,session,path,type));
-		AwtRunnableQueue.INSTANCE.runAfterIoTasks(new Runnable()
-		{
-			public void run()
-			{
-				switch(type[0])
+		AwtRunnableQueue.INSTANCE.runAfterIoTasks(()-> { switch(type[0])
 				{
 				case VFSFile.FILE:
 					if(browser.getMode() == VFSBrowser.CHOOSE_DIRECTORY_DIALOG)
@@ -211,9 +207,7 @@ public class VFSFileChooserDialog extends EnhancedDialog
 				case VFSFile.FILESYSTEM:
 					browser.setDirectory(path);
 					break;
-				}
-			}
-		});
+				}});
 	} //}}}
 
 	//{{{ cancel() method

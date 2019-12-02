@@ -2602,13 +2602,7 @@ public class jEdit
 						// File can be changed into link on disk or vice versa, so update
 						// file-path,buffer key value pair in bufferHash
 						final Buffer b = buffer;
-						Runnable runnable = new Runnable()
-						{
-							public void run()
-							{
-								updateBufferHash(b);
-							}
-						};
+						Runnable runnable = ()-> { updateBufferHash(b);};
 						AwtRunnableQueue.INSTANCE.runAfterIoTasks(runnable);
 					}
 				}
@@ -4048,11 +4042,7 @@ public class jEdit
 			try
 			{
 				EventQueue.invokeAndWait(
-					new Runnable()
-					{
-						public void run()
-						{
-							try
+					()-> { try
 							{
 								UIManager.setLookAndFeel(sLf);
 							}
@@ -4060,10 +4050,7 @@ public class jEdit
 							{
 								// same as above, there really isn't anything to do and this may be
 								// bogus, the lnf may be from the Look And Feel plugin
-							}
-						}
-					}
-				);
+							}});
 			}
 			catch (InterruptedException | InvocationTargetException e)
 			{

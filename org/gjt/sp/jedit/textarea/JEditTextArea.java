@@ -479,13 +479,7 @@ public class JEditTextArea extends TextArea
 			return;
 		JMenuItem customize = new JMenuItem(jEdit.getProperty(
 			"view.context.customize"));
-		customize.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent evt)
-			{
-				new GlobalOptions(view,"context");
-			}
-		});
+		customize.addActionListener((ActionEvent evt)->{ new GlobalOptions(view,"context");});
 		popup.addSeparator();
 		popup.add(customize);
 	} //}}}

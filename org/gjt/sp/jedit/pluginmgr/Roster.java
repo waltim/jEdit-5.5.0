@@ -485,13 +485,7 @@ class Roster
 			{
 				Log.log(Log.ERROR,this,e);
 
-				SwingUtilities.invokeLater(new Runnable()
-				{
-					public void run()
-					{
-						GUIUtilities.error(null,"plugin-error-download",new Object[]{""});
-					}
-				});
+				SwingUtilities.invokeLater(()-> { GUIUtilities.error(null,"plugin-error-download",new Object[]{""});});
 
 				return null;
 			}

@@ -180,13 +180,7 @@ public class RecentFilesProvider implements DynamicMenuProvider
 			}
 		}
 		JMenuItem menuItem = new JMenuItem(jEdit.getProperty("clear-recent-files.label"));
-		menuItem.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				BufferHistory.clear();
-			}
-		});
+		menuItem.addActionListener((ActionEvent e)->{ BufferHistory.clear();});
 		menu.addSeparator();
 		menu.add(menuItem);
 	} //}}}

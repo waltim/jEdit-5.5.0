@@ -324,14 +324,8 @@ public class PluginManagerOptionPane extends AbstractOptionPane
 					if (download)
 					{
 						Log.log(Log.ERROR,this,ex);
-						ThreadUtilities.runInDispatchThread(new Runnable()
-						{
-							public void run()
-							{
-								GUIUtilities.error(PluginManagerOptionPane.this,
-								"ioerror",new String[] { ex.toString() });
-							}
-						});
+						ThreadUtilities.runInDispatchThread(()-> { GUIUtilities.error(PluginManagerOptionPane.this,
+								"ioerror",new String[] { ex.toString() });});
 
 					}
 				}

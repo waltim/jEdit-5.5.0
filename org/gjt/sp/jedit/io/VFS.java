@@ -1172,19 +1172,13 @@ public abstract class VFS
 	//{{{ Class initializer
 	static
 	{
-		EditBus.addToBus(new EBComponent()
-		{
-			public void handleMessage(EBMessage msg)
-			{
-				if(msg instanceof PropertiesChanged)
+		EditBus.addToBus((EBMessage msg)->{ if(msg instanceof PropertiesChanged)
 				{
 					synchronized(lock)
 					{
 						colors = null;
 					}
-				}
-			}
-		});
+				}});
 	} //}}}
 
 	//{{{ recursive listFiles() method

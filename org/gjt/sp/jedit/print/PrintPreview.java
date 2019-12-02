@@ -147,14 +147,7 @@ public class PrintPreview extends EnhancedDialog
 
 	private void installListeners()
 	{
-		cancelButton.addActionListener( new ActionListener()
-		{
-
-				public void actionPerformed( ActionEvent ae )
-				{
-					PrintPreview.this.cancel();
-				}
-			} );
+		cancelButton.addActionListener( (ActionEvent ae )->{ PrintPreview.this.cancel();});
 		
 		// as suggested by Alan, set the keystrokes so that up, down, left, right,
 		// and page up and down go to the next or previous page as appropriate.
@@ -241,11 +234,7 @@ public class PrintPreview extends EnhancedDialog
 			}
 		);
 		
-		pages.addActionListener(new ActionListener()
-			{
-				public void actionPerformed(ActionEvent me)
-				{
-					if (model != null) 
+		pages.addActionListener((ActionEvent me)->{ if (model != null) 
 					{
 						int selectedPage = ( Integer )pages.getSelectedItem();
 						model.setPageNumber( selectedPage - 1 );
@@ -253,9 +242,7 @@ public class PrintPreview extends EnhancedDialog
 						model.setZoomLevel( zoomLevel );
 						attributes.add( new PageRanges( selectedPage ) );
 						printPreviewPane.setModel( model );
-					}
-				}
-			});
+					}});
 
 		prevPage.addActionListener( new ActionListener()
 		{

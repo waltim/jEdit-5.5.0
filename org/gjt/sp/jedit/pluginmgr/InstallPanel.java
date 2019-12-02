@@ -59,7 +59,7 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.List;
+import java.util.List;import java.util.stream.Collectors;
 //}}}
 
 /**
@@ -333,13 +333,7 @@ class InstallPanel extends JPanel implements EBComponent
 		else
 		{
 			layout.show(InstallPanel.this, "INSTALL");
-			EventQueue.invokeLater(new Runnable()
-			{
-				public void run()
-				{
-					searchField.requestFocusInWindow();
-				}
-			});
+			EventQueue.invokeLater(()-> { searchField.requestFocusInWindow();});
 		}
 		isLoading = false;
 	} //}}}
@@ -422,14 +416,7 @@ class InstallPanel extends JPanel implements EBComponent
 				}
 				else
 				{
-					for(Entry e: entries)
-					{
-						if(e.install || e.installedVersion == null || updates)
-						{
-							filteredEntries.add(e);
-						}
-					}
-				}
+					filteredEntries  = entries.stream().filter(e -> e.install || e.installedVersion == null || updates).collect(Collectors.toList());}
 			}
 			else
 			{

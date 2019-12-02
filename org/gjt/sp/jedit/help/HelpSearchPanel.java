@@ -265,11 +265,7 @@ public class HelpSearchPanel extends JPanel
 						Collections.sort(resultModel,new ResultCompare());
 					}
 
-					EventQueue.invokeLater(new Runnable()
-					{
-						public void run()
-						{
-							if(resultModel.isEmpty())
+					EventQueue.invokeLater(()-> { if(resultModel.isEmpty())
 							{
 								results.setListData(new Result[] { 
 										new Result(jEdit.getProperty("helpviewer.no-results")) 
@@ -278,9 +274,7 @@ public class HelpSearchPanel extends JPanel
 								javax.swing.UIManager.getLookAndFeel().provideErrorFeedback(null); 
 							}
 							else
-								results.setListData(resultModel.toArray(new Result[resultModel.size()]));
-						}
-					});
+								results.setListData(resultModel.toArray(new Result[resultModel.size()]));});
 				}
 			});
 

@@ -279,15 +279,8 @@ public class StatusBar extends JPanel
 	{
 		setMessage(message);
 
-		tempTimer = new Timer(0,new ActionListener()
-		{
-			public void actionPerformed(ActionEvent evt)
-			{
-				// so if view is closed in the meantime...
-				if(isShowing())
-					setMessage(null);
-			}
-		});
+		tempTimer = new Timer(0,(ActionEvent evt)->{ if(isShowing())
+					setMessage(null);});
 
 		tempTimer.setInitialDelay(10000);
 		tempTimer.setRepeats(false);

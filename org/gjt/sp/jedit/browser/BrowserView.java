@@ -83,15 +83,9 @@ class BrowserView extends JPanel
 			parentScroller, tableScroller);
 		splitPane.setOneTouchExpandable(true);
 
-		EventQueue.invokeLater(new Runnable()
-		{
-			public void run()
-			{
-				parentDirectories.ensureIndexIsVisible(
+		EventQueue.invokeLater(()-> { parentDirectories.ensureIndexIsVisible(
 					parentDirectories.getModel()
-					.getSize());
-			}
-		});
+					.getSize());});
 
 		if(browser.isMultipleSelectionEnabled())
 			table.getSelectionModel().setSelectionMode(

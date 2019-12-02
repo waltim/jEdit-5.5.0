@@ -580,11 +580,7 @@ public class Log
 			if(lineCount == 0 || listeners.isEmpty())
 				return;
 
-			SwingUtilities.invokeLater(new Runnable()
-			{
-				public void run()
-				{
-					if(wrap)
+			SwingUtilities.invokeLater(()-> { if(wrap)
 					{
 						if(oldWrap)
 							fireIntervalRemoved(0,lineCount - 1);
@@ -602,9 +598,7 @@ public class Log
 						fireIntervalAdded(
 							logLineCount - lineCount + 1,
 							logLineCount);
-					}
-				}
-			});
+					}});
 		} //}}}
 	} //}}}
 

@@ -266,13 +266,7 @@ public class PluginManager extends JFrame
 				{
 					downloadingPluginList = false;
 				}
-				ThreadUtilities.runInDispatchThread(new Runnable()
-				{
-					public void run()
-					{
-						pluginListUpdated();
-					}
-				});
+				ThreadUtilities.runInDispatchThread(()-> { pluginListUpdated();});
 			}
 		});
 

@@ -821,24 +821,8 @@ public class PrinterDialog extends JDialog implements ListSelectionListener
             
             // install listeners
             printers.addListSelectionListener( PrinterDialog.this );
-            allPages.addActionListener( new ActionListener()
-            {
-
-                    public void actionPerformed( ActionEvent ae )
-                    {
-                        pagesField.setEnabled( pages.isSelected() );
-                    }
-                }
-            );
-            pages.addActionListener( new ActionListener()
-            {
-
-                    public void actionPerformed( ActionEvent ae )
-                    {
-                        pagesField.setEnabled( pages.isSelected() );
-                    }
-                }
-            );
+            allPages.addActionListener( (ActionEvent ae )->{ pagesField.setEnabled( pages.isSelected() );});
+            pages.addActionListener( (ActionEvent ae )->{ pagesField.setEnabled( pages.isSelected() );});
             copies.addChangeListener( new ChangeListener()
             {
 
@@ -1125,24 +1109,8 @@ public class PrinterDialog extends JDialog implements ListSelectionListener
                     }
                 }
             );
-            paperSize.addActionListener( new ActionListener()
-            {
-
-                    public void actionPerformed( ActionEvent ae )
-                    {
-                        PageSetupPanel.this.setDefaultMargins();
-                    }
-                }
-            );
-            orientation.addActionListener( new ActionListener()
-            {
-
-                    public void actionPerformed( ActionEvent ae )
-                    {
-                        PageSetupPanel.this.setDefaultMargins();
-                    }
-                }
-            );
+            paperSize.addActionListener( (ActionEvent ae )->{ PageSetupPanel.this.setDefaultMargins();});
+            orientation.addActionListener( (ActionEvent ae )->{ PageSetupPanel.this.setDefaultMargins();});
             
             
         }
@@ -1645,15 +1613,7 @@ public class PrinterDialog extends JDialog implements ListSelectionListener
             add( content, BorderLayout.NORTH );
 
             // add listeners
-            atButton.addActionListener( new ActionListener()
-            {
-
-                    public void actionPerformed( ActionEvent ae )
-                    {
-                        when.setEnabled( atButton.isSelected() );
-                    }
-                }
-            );
+            atButton.addActionListener( (ActionEvent ae )->{ when.setEnabled( atButton.isSelected() );});
             
         }
 

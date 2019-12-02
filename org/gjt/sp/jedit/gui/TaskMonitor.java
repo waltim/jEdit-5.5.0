@@ -61,17 +61,11 @@ public class TaskMonitor extends JPanel implements TaskListener
 		panel.add(remainingCount, BorderLayout.NORTH);
 
 		model = new TaskTableModel();
-		model.addTableModelListener(new TableModelListener()
-		{
-			public void tableChanged(TableModelEvent e)
-			{
-				if (e.getType() == TableModelEvent.INSERT ||
+		model.addTableModelListener((TableModelEvent e)->{ if (e.getType() == TableModelEvent.INSERT ||
 					e.getType() == TableModelEvent.DELETE)
 				{
 					updateTasksCount();
-				}
-			}
-		});
+				}});
 		table = new JTable(model);
 		table.setRowHeight(GenericGUIUtilities.defaultRowHeight());
 		table.setDefaultRenderer(Object.class, new TaskCellRenderer());
@@ -90,13 +84,7 @@ public class TaskMonitor extends JPanel implements TaskListener
 	@Override
 	public void addNotify()
 	{
-		TaskManager.instance.visit(new TaskManager.TaskVisitor()
-		{
-			public void visit(Task task)
-			{
-				model.addTask(task);
-			}
-		});
+		TaskManager.instance.visit((Task task)->{ model.addTask(task);});
 		TaskManager.instance.addTaskListener(this);
 		super.addNotify();
 	} //}}}

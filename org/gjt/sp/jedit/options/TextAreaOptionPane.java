@@ -79,20 +79,14 @@ public class TextAreaOptionPane extends AbstractOptionPane
 		fontSubstSystemFonts = new JCheckBox(jEdit.getProperty("options.textarea.fontSubstSystemFonts"));
 		fontSubstSystemFonts.setSelected(jEdit.getBooleanProperty("view.enableFontSubstSystemFonts"));
 		fontSubstSystemFonts.setVisible(fontSubst.isSelected());
-		fontSubstSystemFonts.addActionListener(new ActionListener()
-			{
-				public void actionPerformed(ActionEvent evt)
-				{
-					if (!fontSubstSystemFonts.isSelected()
+		fontSubstSystemFonts.addActionListener((ActionEvent evt)->{ if (!fontSubstSystemFonts.isSelected()
 						&& (fontSubstList.listSize() == 0))
 					{
 						JOptionPane.showMessageDialog(fontSubstSystemFonts.getParent(),
 							jEdit.getProperty("options.textarea.fontSubstWarning"),
 							jEdit.getProperty("options.textarea.fontSubstWarning.label"),
 							JOptionPane.WARNING_MESSAGE);
-					}
-				}
-			});
+					}});
 		addComponent(fontSubstSystemFonts, GridBagConstraints.HORIZONTAL);
 
 		/* Anti-aliasing */

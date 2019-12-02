@@ -547,13 +547,7 @@ public class DockableWindowManagerImpl extends DockableWindowManager
 		JPopupMenu popup = new JPopupMenu();
 		if(dockable == null && container instanceof PanelWindowContainer)
 		{
-			ActionListener listener = new ActionListener()
-			{
-				public void actionPerformed(ActionEvent evt)
-				{
-					showDockableWindow(evt.getActionCommand());
-				}
-			};
+			ActionListener listener = (ActionEvent evt)->{ showDockableWindow(evt.getActionCommand());};
 
 			String[] dockables = ((PanelWindowContainer)
 				container).getDockables();
@@ -606,29 +600,17 @@ public class DockableWindowManagerImpl extends DockableWindowManager
 
 			JMenuItem cloneMenuItem = new JMenuItem(jEdit.getProperty("view.docking.menu-clone"));
 
-			cloneMenuItem.addActionListener(new ActionListener()
-			{
-				public void actionPerformed(ActionEvent evt)
-				{
-					floatDockableWindow(dockable);
-				}
-			});
+			cloneMenuItem.addActionListener((ActionEvent evt)->{ floatDockableWindow(dockable);});
 			popup.add(cloneMenuItem);
 
 			popup.addSeparator();
 
 			JMenuItem closeMenuItem = new JMenuItem(jEdit.getProperty("view.docking.menu-close"));
 
-			closeMenuItem.addActionListener(new ActionListener()
-			{
-				public void actionPerformed(ActionEvent evt)
-				{
-					if(clone)
+			closeMenuItem.addActionListener((ActionEvent evt)->{ if(clone)
 						((FloatingWindowContainer)container).dispose();
 					else
-						removeDockableWindow(dockable);
-				}
-			});
+						removeDockableWindow(dockable);});
 			popup.add(closeMenuItem);
 
 			if(!(clone || currentPos.equals(FLOATING)))
