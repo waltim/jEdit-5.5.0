@@ -82,14 +82,8 @@ public class BufferInsertRequest extends BufferIORequest
 
 			/* we don't do this in Buffer.insert() so that
 			   we can insert multiple files at once */
-			AwtRunnableQueue.INSTANCE.runAfterIoTasks(new Runnable()
-			{
-				public void run()
-				{
-					view.getTextArea().setSelectedText(
-						seg.toString());
-				}
-			});
+			AwtRunnableQueue.INSTANCE.runAfterIoTasks(() -> view.getTextArea().setSelectedText(
+                seg.toString()));
 		}
 		catch(InterruptedException e)
 		{

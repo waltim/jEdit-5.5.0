@@ -171,15 +171,10 @@ public class GeneralOptionPane extends AbstractOptionPane
 				"options.general.restore"));
 
 		restore.setSelected(jEdit.getBooleanProperty("restore"));
-		restore.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent evt)
-			{
-				restoreCLI.setEnabled(restore.isSelected());
-				restoreRemote.setEnabled(restore.isSelected());
-			}
-		});
+		restore.addActionListener(evt -> {
+            restoreCLI.setEnabled(restore.isSelected());
+            restoreRemote.setEnabled(restore.isSelected());
+        });
 
 		addComponent(restore);
 
@@ -216,14 +211,7 @@ public class GeneralOptionPane extends AbstractOptionPane
 
 		useDefaultLocale = new JCheckBox(jEdit.getProperty("options.appearance.usedefaultlocale.label"));
 		useDefaultLocale.setSelected(jEdit.getBooleanProperty("lang.usedefaultlocale"));
-		useDefaultLocale.addChangeListener(new ChangeListener()
-		{
-			@Override
-			public void stateChanged(ChangeEvent e)
-			{
-				lang.setEnabled(!useDefaultLocale.isSelected());
-			}
-		});
+		useDefaultLocale.addChangeListener(e -> lang.setEnabled(!useDefaultLocale.isSelected()));
 		lang = new JComboBox<String>(languages);
 		lang.setEnabled(!useDefaultLocale.isSelected());
 		lang.setSelectedItem(language);

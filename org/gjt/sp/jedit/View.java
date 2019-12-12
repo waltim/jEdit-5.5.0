@@ -733,14 +733,7 @@ public class View extends JFrame implements InputHandlerProvider
 
 		}
 
-		EventQueue.invokeLater(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				newSplitPane.setDividerLocation(dividerPosition);
-			}
-		});
+		EventQueue.invokeLater(() -> newSplitPane.setDividerLocation(dividerPosition));
 
 		newEditPane.focusOnTextArea();
 

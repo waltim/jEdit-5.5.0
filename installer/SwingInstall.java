@@ -393,30 +393,22 @@ public class SwingInstall extends JFrame
 					//everything is perfect, clean label
 					if(message.getParent()!=null)
 					{
-						SwingUtilities.invokeLater(new Runnable()
-							{
-								public void run()
-								{
-									parent.remove(message);
-									parent.revalidate();
-									parent.repaint();
-								}
-							});
+						SwingUtilities.invokeLater(() -> {
+							parent.remove(message);
+							parent.revalidate();
+							parent.repaint();
+						});
 					}
 				}
 				else
 				{
 					if(message.getParent()==null)
 					{
-						SwingUtilities.invokeLater(new Runnable()
-							{
-								public void run()
-								{
-									parent.add(message,pos);
-									parent.revalidate();
-									parent.repaint();
-								}
-							});
+						SwingUtilities.invokeLater(() -> {
+							parent.add(message,pos);
+							parent.revalidate();
+							parent.repaint();
+						});
 					}
 					else message.repaint();
 				}
@@ -709,27 +701,15 @@ public class SwingInstall extends JFrame
 
 		public void setMaximum(final int max)
 		{
-			SwingUtilities.invokeLater(new Runnable()
-			{
-				public void run()
-				{
-					progress.setMaximum(max);
-				}
-			});
+			SwingUtilities.invokeLater(() -> progress.setMaximum(max));
 		}
 
 		public void advance(final int value)
 		{
 			try
 			{
-				SwingUtilities.invokeAndWait(new Runnable()
-				{
-					public void run()
-					{
-						progress.setValue(progress
-							.getValue() + value);
-					}
-				});
+				SwingUtilities.invokeAndWait(() -> progress.setValue(progress
+					.getValue() + value));
 				Thread.yield();
 			}
 			catch(Exception e)
@@ -739,41 +719,27 @@ public class SwingInstall extends JFrame
 
 		public void done()
 		{
-			SwingUtilities.invokeLater(new Runnable()
-			{
-				public void run()
-				{
-					currentPage++;
-					pageChanged();
-				}
+			SwingUtilities.invokeLater(() -> {
+				currentPage++;
+				pageChanged();
 			});
 		}
 
 		public void error(final String message)
 		{
-			SwingUtilities.invokeLater(new Runnable()
-			{
-				public void run()
-				{
-					dispose();
-					JOptionPane.showMessageDialog(null,
-						message,
-						"Installation aborted",
-						JOptionPane.ERROR_MESSAGE);
-					System.exit(1);
-				}
+			SwingUtilities.invokeLater(() -> {
+				dispose();
+				JOptionPane.showMessageDialog(null,
+					message,
+					"Installation aborted",
+					JOptionPane.ERROR_MESSAGE);
+				System.exit(1);
 			});
 		}
 
 		public void message(final String message)
 		{
-			SwingUtilities.invokeLater(new Runnable()
-			{
-				public void run()
-				{
-					progress.setString(message);
-				}
-			});
+			SwingUtilities.invokeLater(() -> progress.setString(message));
 		}
 
 		public void setThread(InstallThread thread)

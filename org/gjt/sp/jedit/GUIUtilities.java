@@ -680,14 +680,7 @@ public class GUIUtilities
                 {
                         try
                         {
-                            EventQueue.invokeAndWait(new Runnable()
-                            {
-                                    @Override
-                                    public void run()
-                                    {
-                                            message(comp, name, args);
-                                    }
-                            });
+                            EventQueue.invokeAndWait(() -> message(comp, name, args));
                         }
                         catch (Exception e)		// NOPMD
                         {
@@ -724,14 +717,7 @@ public class GUIUtilities
                 {
                         try
                         {
-                                EventQueue.invokeAndWait(new Runnable()
-                                {
-                                        @Override
-                                        public void run()
-                                        {
-                                                error(comp, name, args);
-                                        }
-                                });
+                                EventQueue.invokeAndWait(() -> error(comp, name, args));
                         }
                         catch (Exception e)		// NOPMD
                         {
@@ -799,14 +785,7 @@ public class GUIUtilities
 		final String[] retValue = new String[1];
 		try
 		{
-			EventQueue.invokeAndWait(new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					retValue[0] = input(comp, name, args, def);
-				}
-			});
+			EventQueue.invokeAndWait(() -> retValue[0] = input(comp, name, args, def));
 		}
 		catch (Exception e)
 		{
@@ -848,14 +827,7 @@ public class GUIUtilities
 		final String[] retValue = new String[1];
 		try
 		{
-			EventQueue.invokeAndWait(new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					retValue[0] = inputProperty(comp, name, args, def);
-				}
-			});
+			EventQueue.invokeAndWait(() -> retValue[0] = inputProperty(comp, name, args, def));
 		}
 		catch (Exception e)
 		{
@@ -895,14 +867,7 @@ public class GUIUtilities
 		final int [] retValue = new int[1];
 		try
 		{
-			EventQueue.invokeAndWait(new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					retValue[0] = confirm(comp, name, args, buttons, type);
-				}
-			});
+			EventQueue.invokeAndWait(() -> retValue[0] = confirm(comp, name, args, buttons, type));
 		}
 		catch (Exception e)
 		{
@@ -943,14 +908,7 @@ public class GUIUtilities
 		final int[] retValue = new int[1];
 		try
 		{
-			EventQueue.invokeAndWait(new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					retValue[0] = option(comp, name, args, type, options, initialValue);
-				}
-			});
+			EventQueue.invokeAndWait(() -> retValue[0] = option(comp, name, args, type, options, initialValue));
 		}
 		catch (Exception e)
 		{
@@ -996,14 +954,7 @@ public class GUIUtilities
 		final int [] retValue = new int[1];
 		try
 		{
-			EventQueue.invokeAndWait(new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					retValue[0] = listConfirm(comp, name, args, listModel);
-				}
-			});
+			EventQueue.invokeAndWait(() -> retValue[0] = listConfirm(comp, name, args, listModel));
 		}
 		catch (Exception e)
 		{
@@ -1057,14 +1008,7 @@ public class GUIUtilities
 		final int [] retValue = new int[1];
 		try
 		{
-			EventQueue.invokeAndWait(new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					retValue[0] = listConfirm(comp, name, args, listModel, selectedItems);
-				}
-			});
+			EventQueue.invokeAndWait(() -> retValue[0] = listConfirm(comp, name, args, listModel, selectedItems));
 		}
 		catch (Exception e)
 		{
@@ -1954,13 +1898,7 @@ public class GUIUtilities
 		// Have to do it in the EDT, since it creates gui components
 		try
 		{
-			SwingUtilities.invokeAndWait(new Runnable()
-			{
-				public void run()
-				{
-					splash = new SplashScreen();
-				}
-			});
+			SwingUtilities.invokeAndWait(() -> splash = new SplashScreen());
 		}
 		catch (Exception e)
 		{
@@ -2127,14 +2065,7 @@ public class GUIUtilities
 	//{{{ Inner classes
 
 	private static final AtomicLong executorThreadsCounter = new AtomicLong();
-	private static final ScheduledExecutorService schedExecutor = Executors.newSingleThreadScheduledExecutor(new ThreadFactory()
-	{
-		@Override
-		public Thread newThread(Runnable r)
-		{
-			return new Thread(r, "SizeSaver-" + executorThreadsCounter.incrementAndGet());
-		}
-	});
+	private static final ScheduledExecutorService schedExecutor = Executors.newSingleThreadScheduledExecutor(r -> new Thread(r, "SizeSaver-" + executorThreadsCounter.incrementAndGet()));
 	//{{{ SizeSaver class
 	/**
 	 * A combined ComponentListener and WindowStateListener to continually save a Frames size.<br />
@@ -2226,21 +2157,7 @@ public class GUIUtilities
 		public void componentMoved(ComponentEvent ce)
 		{
 			final Rectangle bounds = frame.getBounds();
-			final Runnable sizeSaver = new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					EventQueue.invokeLater(new Runnable()
-					{
-						@Override
-						public void run()
-						{
-							save(frame.getExtendedState(), bounds);
-						}
-					});
-				}
-			};
+			final Runnable sizeSaver = () -> EventQueue.invokeLater(() -> save(frame.getExtendedState(), bounds));
 
 			cancelResizeSave();
 			resizeDelayFuture = schedExecutor.schedule(sizeSaver, 500, TimeUnit.MILLISECONDS);

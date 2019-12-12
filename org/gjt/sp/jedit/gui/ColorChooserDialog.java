@@ -62,37 +62,23 @@ public class ColorChooserDialog extends JDialog
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(17, 0, 0, 0));
         JButton ok = new JButton(jEdit.getProperty("common.ok"));
-        ok.addActionListener( 
-            new ActionListener() 
-            {
-                public void actionPerformed( ActionEvent ae ) 
-                {
+        ok.addActionListener(
+                ae -> {
                     ColorChooserDialog.this.setVisible(false);
                     ColorChooserDialog.this.dispose();
                 }
-            }
         );
         getRootPane().setDefaultButton(ok);
         JButton cancel = new JButton(jEdit.getProperty("common.cancel"));
-        cancel.addActionListener( 
-            new ActionListener() 
-            {
-                public void actionPerformed( ActionEvent ae ) 
-                {
+        cancel.addActionListener(
+                ae -> {
                     ColorChooserDialog.this.setVisible(false);
                     ColorChooserDialog.this.dispose();
                 }
-            }
         );
         JButton reset = new JButton(jEdit.getProperty("common.reset"));
-        reset.addActionListener( 
-            new ActionListener() 
-            {
-                public void actionPerformed( ActionEvent ae ) 
-                {
-                    colorChooser.setColor(initialColor);
-                }
-            }
+        reset.addActionListener(
+                ae -> colorChooser.setColor(initialColor)
         );
         GenericGUIUtilities.makeSameSize(ok, cancel, reset);
 

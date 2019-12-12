@@ -47,15 +47,11 @@ public class RecentDirectoriesProvider implements DynamicMenuProvider
 		final View view = GUIUtilities.getView(menu);
 
 		//{{{ ActionListener...
-		ActionListener actionListener = new ActionListener()
-		{
-			public void actionPerformed(ActionEvent evt)
-			{
-				VFSBrowser.browseDirectory(view,evt.getActionCommand());
+		ActionListener actionListener = evt -> {
+            VFSBrowser.browseDirectory(view,evt.getActionCommand());
 
-				view.getStatus().setMessage(null);
-			}
-		}; //}}}
+            view.getStatus().setMessage(null);
+        }; //}}}
 
 		//{{{ MouseListener...
 		MouseListener mouseListener = new MouseAdapter()

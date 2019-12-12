@@ -141,23 +141,18 @@ public class BufferPrinter1_7
 
 		// ready to print
 		// run this in a background thread, it can take some time for a large buffer
-		Runnable runner = new Runnable()
-		{
-
-			public void run()
-			{
-				try
-				{
-					//Log.log(Log.DEBUG, this, "sending print job to printer");
-					job.print( doc, format );
-					//Log.log(Log.DEBUG, this, "printing complete");
-				}
-				catch ( PrintException e )
-				{
-					JOptionPane.showMessageDialog( view, jEdit.getProperty( "print-error.message", new String[] {e.getMessage()} ), jEdit.getProperty( "print-error.title" ), JOptionPane.ERROR_MESSAGE );
-				}
-			}
-		};
+		Runnable runner = () -> {
+            try
+            {
+                //Log.log(Log.DEBUG, this, "sending print job to printer");
+                job.print( doc, format );
+                //Log.log(Log.DEBUG, this, "printing complete");
+            }
+            catch ( PrintException e )
+            {
+                JOptionPane.showMessageDialog( view, jEdit.getProperty( "print-error.message", new String[] {e.getMessage()} ), jEdit.getProperty( "print-error.title" ), JOptionPane.ERROR_MESSAGE );
+            }
+        };
 		ThreadUtilities.runInBackground( runner );
 	}	//}}}
 	

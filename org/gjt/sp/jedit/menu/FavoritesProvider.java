@@ -46,22 +46,10 @@ public class FavoritesProvider implements DynamicMenuProvider
 		final View view = GUIUtilities.getView(menu);
 
 		//{{{ ActionListeners
-		ActionListener fileListener = new ActionListener()
-		{
-			public void actionPerformed(ActionEvent evt)
-			{
-				jEdit.openFile(view,evt.getActionCommand());
-			}
-		};
+		ActionListener fileListener = evt -> jEdit.openFile(view,evt.getActionCommand());
 
-		ActionListener dirListener = new ActionListener()
-		{
-			public void actionPerformed(ActionEvent evt)
-			{
-				VFSBrowser.browseDirectory(view,
-					evt.getActionCommand());
-			}
-		}; //}}}
+		ActionListener dirListener = evt -> VFSBrowser.browseDirectory(view,
+            evt.getActionCommand()); //}}}
 
 		VFSFile[] favorites = FavoritesVFS.getFavorites();
 		if(favorites.length == 0)

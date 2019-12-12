@@ -108,23 +108,18 @@ public class SearchBar extends JToolBar
 		update();
 
 		//{{{ Create the timer used by incremental search
-		timer = new Timer(0,new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent evt)
+		timer = new Timer(0, evt -> {
+			if(!incrementalSearch(searchStart,searchReverse))
 			{
-				if(!incrementalSearch(searchStart,searchReverse))
+				if(!incrementalSearch(
+					(searchReverse
+					? view.getBuffer().getLength()
+					: 0),searchReverse))
 				{
-					if(!incrementalSearch(
-						(searchReverse
-						? view.getBuffer().getLength()
-						: 0),searchReverse))
-					{
-						// not found at all.
-						view.getStatus().setMessageAndClear(
-							jEdit.getProperty(
-							"view.status.search-not-found"));
-					}
+					// not found at all.
+					view.getStatus().setMessageAndClear(
+						jEdit.getProperty(
+						"view.status.search-not-found"));
 				}
 			}
 		}); //}}}
