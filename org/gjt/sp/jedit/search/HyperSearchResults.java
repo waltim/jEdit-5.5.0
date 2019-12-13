@@ -276,47 +276,42 @@ public class HyperSearchResults extends JPanel implements DefaultFocusComponent
 		caption.setText(jEdit.getProperty("hypersearch-results.done",
 				new String [] { trimSearchString() }));
 
-		EventQueue.invokeLater(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				if(!multiStatus)
-				{
-					for(int i = 0; i < resultTreeRoot.getChildCount(); i++)
-					{
-						resultTreeRoot.remove(0);
-					}
-				}
-
-				resultTreeRoot.add(searchNode);
-				resultTreeModel.reload(resultTreeRoot);
-
-
-				for (int i = 0; i < nodeCount; i++)
-				{
-					TreePath lastNode = new TreePath(
-						((DefaultMutableTreeNode)
-						searchNode.getChildAt(i))
-						.getPath());
-
-					resultTree.expandPath(lastNode);
-				}
-				TreePath treePath;
-				if (selectNode == null)
-				{
-					treePath = new TreePath(new Object[]{
-						resultTreeRoot, searchNode});
-				}
-				else
-				{
-					treePath = new TreePath(selectNode.getPath());
-				}
-				resultTree.setSelectionPath(treePath);
-				resultTree.scrollPathToVisible(
-					treePath);
-			}
-		});
+		EventQueue.invokeLater(() -> {
+                    if(!multiStatus)
+                    {
+                        for(int i = 0; i < resultTreeRoot.getChildCount(); i++)
+                        {
+                            resultTreeRoot.remove(0);
+                        }
+                    }
+                    
+                    resultTreeRoot.add(searchNode);
+                    resultTreeModel.reload(resultTreeRoot);
+                    
+                    
+                    for (int i = 0; i < nodeCount; i++)
+                    {
+                        TreePath lastNode = new TreePath(
+                                ((DefaultMutableTreeNode)
+                                        searchNode.getChildAt(i))
+                                        .getPath());
+                        
+                        resultTree.expandPath(lastNode);
+                    }
+                    TreePath treePath;
+                    if (selectNode == null)
+                    {
+                        treePath = new TreePath(new Object[]{
+                            resultTreeRoot, searchNode});
+                    }
+                    else
+                    {
+                        treePath = new TreePath(selectNode.getPath());
+                    }
+                    resultTree.setSelectionPath(treePath);
+                    resultTree.scrollPathToVisible(
+                            treePath);
+                });
 	} //}}}
 
 	//{{{ searchDone() method
@@ -614,14 +609,7 @@ public class HyperSearchResults extends JPanel implements DefaultFocusComponent
 				goToSelectedNode(M_OPEN);
 
 				// fuck me dead
-				EventQueue.invokeLater(new Runnable()
-				{
-					@Override
-					public void run()
-					{
-						resultTree.requestFocus();
-					}
-				});
+				EventQueue.invokeLater(resultTree::requestFocus);
 
 				evt.consume();
 				break;

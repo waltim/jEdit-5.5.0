@@ -83,15 +83,11 @@ class BrowserView extends JPanel
 			parentScroller, tableScroller);
 		splitPane.setOneTouchExpandable(true);
 
-		EventQueue.invokeLater(new Runnable()
-		{
-			public void run()
-			{
-				parentDirectories.ensureIndexIsVisible(
-					parentDirectories.getModel()
-					.getSize());
-			}
-		});
+		EventQueue.invokeLater(() -> {
+                    parentDirectories.ensureIndexIsVisible(
+                            parentDirectories.getModel()
+                                    .getSize());
+                });
 
 		if(browser.isMultipleSelectionEnabled())
 			table.getSelectionModel().setSelectionMode(
@@ -168,15 +164,11 @@ class BrowserView extends JPanel
 		}
 
 		final Object[] loadInfo = new Object[2];
-		Runnable awtRunnable = new Runnable()
-		{
-			public void run()
-			{
-				browser.directoryLoaded(node,loadInfo,addToHistory);
-				if (delayedAWTTask != null)
-					delayedAWTTask.run();
-			}
-		};
+		Runnable awtRunnable = () -> {
+                    browser.directoryLoaded(node,loadInfo,addToHistory);
+                    if (delayedAWTTask != null)
+                        delayedAWTTask.run();
+                };
 		ThreadUtilities.runInBackground(new ListDirectoryBrowserTask(browser,
 			session, vfs, path, loadInfo, awtRunnable));
 	} //}}}
@@ -371,16 +363,12 @@ class BrowserView extends JPanel
 				// we use SwingUtilities.invokeLater()
 				// so that the action is executed before
 				// the popup is hidden.
-				EventQueue.invokeLater(new Runnable()
-				{
-					public void run()
-					{
-						int index = parentDirectories
-							.getModel()
-							.getSize() - 1;
-						parentDirectories.setSelectedIndex(index);
-					}
-				});
+				EventQueue.invokeLater(() -> {
+                                    int index = parentDirectories
+                                            .getModel()
+                                            .getSize() - 1;
+                                    parentDirectories.setSelectedIndex(index);
+                                });
 			}
 		});
 		GenericGUIUtilities.showPopupMenu(popup,comp,point.x,point.y);

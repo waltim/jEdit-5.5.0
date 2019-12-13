@@ -5103,16 +5103,11 @@ loop:		for(int i = lineNo - 1; i >= 0; i--)
 			final int firstLine = getFirstLine();
 			final int visible = visibleLines - (lastLinePartial ? 1 : 0);
 
-			Runnable runnable = new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					vertical.setValues(firstLine,visible,0,lineCount);
-					vertical.setUnitIncrement(2);
-					vertical.setBlockIncrement(visible);
-				}
-			};
+			Runnable runnable = () -> {
+                            vertical.setValues(firstLine,visible,0,lineCount);
+                            vertical.setUnitIncrement(2);
+                            vertical.setBlockIncrement(visible);
+                        };
 			ThreadUtilities.runInDispatchThread(runnable);
 		}
 	} //}}}

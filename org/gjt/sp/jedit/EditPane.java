@@ -191,40 +191,32 @@ public class EditPane extends JPanel implements BufferSetListener
 
 		if (requestFocus)
 		{
-			SwingUtilities.invokeLater(new Runnable()
-			{
-				public void run()
-				{
-					// only do this if we are the current edit pane
-					if(view.getEditPane() == EditPane.this
-						&& (bufferSwitcher == null
-						|| !bufferSwitcher.isPopupVisible()))
-					{
-						textArea.requestFocus();
-					}
-				}
-			});
+			SwingUtilities.invokeLater(() -> {
+                            // only do this if we are the current edit pane
+                            if(view.getEditPane() == EditPane.this
+                                    && (bufferSwitcher == null
+                                    || !bufferSwitcher.isPopupVisible()))
+                            {
+                                textArea.requestFocus();
+                            }
+                        });
 		}
 
 		// If the buffer is loading, the caret info will be loaded on
 		// BufferUpdate.LOADED. Otherwise, we don't need to wait for IO.
 		if (!buffer.isLoading())
 		{
-			ThreadUtilities.runInDispatchThread(new Runnable()
-			{
-				public void run()
-				{
-					// avoid a race condition
-					// see bug #834338
-					if(buffer == getBuffer())
-						loadCaretInfo();
-					// This must happen after loadCaretInfo.
-					// Otherwise caret is not restored properly.
-					int check = jEdit.getIntegerProperty("checkFileStatus");
-					if (jEdit.isStartupDone() && (check & GeneralOptionPane.checkFileStatus_focusBuffer) > 0)
-						jEdit.checkBufferStatus(view, true);
-				}
-			});
+			ThreadUtilities.runInDispatchThread(() -> {
+                            // avoid a race condition
+                            // see bug #834338
+                            if(buffer == getBuffer())
+                                loadCaretInfo();
+                            // This must happen after loadCaretInfo.
+                            // Otherwise caret is not restored properly.
+                            int check = jEdit.getIntegerProperty("checkFileStatus");
+                            if (jEdit.isStartupDone() && (check & GeneralOptionPane.checkFileStatus_focusBuffer) > 0)
+                                jEdit.checkBufferStatus(view, true);
+                        });
 		}
 	} //}}}
 
@@ -270,13 +262,7 @@ public class EditPane extends JPanel implements BufferSetListener
 	 */
 	public void focusOnTextArea()
 	{
-		SwingUtilities.invokeLater(new Runnable()
-		{
-			public void run()
-			{
-				textArea.requestFocus();
-			}
-		});
+		SwingUtilities.invokeLater(textArea::requestFocus);
 	} //}}}
 
 	//{{{ getTextArea() method
@@ -313,15 +299,10 @@ public class EditPane extends JPanel implements BufferSetListener
 			javax.swing.UIManager.getLookAndFeel().provideErrorFeedback(null); 
 		else
 		{
-			SwingUtilities.invokeLater(new Runnable()
-			{
-				public void run()
-				{
-					bufferSwitcher.requestFocus();
-					bufferSwitcher.showPopup();
-				}
-
-			});
+			SwingUtilities.invokeLater(() -> {
+                            bufferSwitcher.requestFocus();
+                            bufferSwitcher.showPopup();
+                        });
 		}
 	} //}}}
 
@@ -824,16 +805,10 @@ public class EditPane extends JPanel implements BufferSetListener
 		gutter.setMinLineNumberDigitCount(GutterOptionPane.getMinLineNumberDigits());
 		gutter.setSelectionAreaEnabled(GutterOptionPane.isSelectionAreaEnabled());
 		gutter.addExtension(markerHighlight);
-		gutter.setSelectionPopupHandler(
-			new GutterPopupHandler()
-			{
-				public void handlePopup(int x, int y, int line)
-				{
-					Buffer buffer = getBuffer();
-					buffer.addOrRemoveMarker('\0',
-						buffer.getLineStartOffset(line));
-				}
-			});
+		gutter.setSelectionPopupHandler((int x1, int y1, int line) -> {
+                    Buffer buffer1 = getBuffer();
+                    buffer1.addOrRemoveMarker('\0', buffer1.getLineStartOffset(line));
+                });
 
 		textArea.addStatusListener(new StatusHandler());
 		add(BorderLayout.CENTER,textArea);

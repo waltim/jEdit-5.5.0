@@ -277,32 +277,27 @@ public class VFSManager
 		final Object[] args,
 		final int urgency)
 	{
-		Runnable r = new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				final Frame frame =
-					JOptionPane.getFrameForComponent(comp);
-
-				synchronized(errorLock)
-				{
-					error = true;
-
-					errors.add(new ErrorListDialog.ErrorEntry(
-						path,messageProp,args,urgency));
-
-					if(errors.size() == 1)
-					{
-						if (!errorDisplayerActive)
-						{
-							ThreadUtilities.runInBackground(
-								new ErrorDisplayer(frame));
-						}
-					}
-				}
-			}
-		};
+		Runnable r = () -> {
+                    final Frame frame =
+                            JOptionPane.getFrameForComponent(comp);
+                    
+                    synchronized(errorLock)
+                    {
+                        error = true;
+                        
+                        errors.add(new ErrorListDialog.ErrorEntry(
+                                path,messageProp,args,urgency));
+                        
+                        if(errors.size() == 1)
+                        {
+                            if (!errorDisplayerActive)
+                            {
+                                ThreadUtilities.runInBackground(
+                                        new ErrorDisplayer(frame));
+                            }
+                        }
+                    }
+                };
 		ThreadUtilities.runInDispatchThreadAndWait(r);
 	} //}}}
 
@@ -416,21 +411,18 @@ public class VFSManager
 		{
 			try
 			{
-				EventQueue.invokeAndWait(new Runnable() {
-					public void run()
-					{
-						String caption = jEdit.getProperty(
-							"ioerror.caption" + (errors.size() == 1
-							? "-1" : ""),new Integer[] {
-							Integer.valueOf(errors.size())});
-						new ErrorListDialog(
-							frame.isShowing()
-							? frame
-							: jEdit.getFirstView(),
-							jEdit.getProperty("ioerror.title"),
-							caption,errors,false);
-					}
-				});
+				EventQueue.invokeAndWait(() -> {
+                                    String caption = jEdit.getProperty(
+                                            "ioerror.caption" + (errors.size() == 1
+                                                    ? "-1" : ""),new Integer[] {
+                                                        Integer.valueOf(errors.size())});
+                                    new ErrorListDialog(
+                                            frame.isShowing()
+                                                    ? frame
+                                                    : jEdit.getFirstView(),
+                                            jEdit.getProperty("ioerror.title"),
+                                            caption,errors,false);
+                                });
 			}
 			catch (InterruptedException ie)
 			{

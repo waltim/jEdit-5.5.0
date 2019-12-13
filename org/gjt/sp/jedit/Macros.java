@@ -162,14 +162,9 @@ public class Macros
 		{
 			try
 			{
-				EventQueue.invokeAndWait(new Runnable()
-				{
-					@Override
-					public void run()
-					{
-						message(comp, message);
-					}
-				});
+				EventQueue.invokeAndWait(() -> {
+                                    message(comp, message);
+                                });
 			}
 			catch (Exception e)		// NOPMD
 			{
@@ -202,14 +197,9 @@ public class Macros
 		{
 			try
 			{
-				EventQueue.invokeAndWait(new Runnable()
-				{
-					@Override
-					public void run()
-					{
-						message(comp, message);
-					}
-				});
+				EventQueue.invokeAndWait(() -> {
+                                    message(comp, message);
+                                });
 			}
 			catch (Exception e)		// NOPMD
 			{
@@ -254,14 +244,9 @@ public class Macros
 		final String[] retValue = new String[1];
 		try
 		{
-			EventQueue.invokeAndWait(new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					retValue[0] = input(comp, prompt, defaultValue);
-				}
-			});
+			EventQueue.invokeAndWait(() -> {
+                            retValue[0] = input(comp, prompt, defaultValue);
+                        });
 		}
 		catch (Exception e)
 		{
@@ -294,14 +279,9 @@ public class Macros
 		final int [] retValue = new int[1];
 		try
 		{
-			EventQueue.invokeAndWait(new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					retValue[0] = confirm(comp, prompt, buttons);
-				}
-			});
+			EventQueue.invokeAndWait(() -> {
+                            retValue[0] = confirm(comp, prompt, buttons);
+                        });
 		}
 		catch (Exception e)
 		{
@@ -337,14 +317,9 @@ public class Macros
 		final int [] retValue = new int[1];
 		try
 		{
-			EventQueue.invokeAndWait(new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					retValue[0] = confirm(comp, prompt, buttons, type);
-				}
-			});
+			EventQueue.invokeAndWait(() -> {
+                            retValue[0] = confirm(comp, prompt, buttons, type);
+                        });
 		}
 		catch (Exception e)
 		{

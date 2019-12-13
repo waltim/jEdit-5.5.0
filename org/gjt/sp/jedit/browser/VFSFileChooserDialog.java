@@ -178,42 +178,38 @@ public class VFSFileChooserDialog extends EnhancedDialog
 
 		ThreadUtilities.runInBackground(new GetFileTypeRequest(
 			vfs,session,path,type));
-		AwtRunnableQueue.INSTANCE.runAfterIoTasks(new Runnable()
-		{
-			public void run()
-			{
-				switch(type[0])
-				{
-				case VFSFile.FILE:
-					if(browser.getMode() == VFSBrowser.CHOOSE_DIRECTORY_DIALOG)
-						break;
-
-					if(vfs instanceof FileVFS)
-					{
-						if(doFileExistsWarning(path))
-							break;
-					}
-					isOK = true;
-					if(browser.getMode() == VFSBrowser.BROWSER_DIALOG)
-					{
-						Hashtable<String, Object> props = new Hashtable<String, Object>();
-						if(browser.currentEncoding != null)
-						{
-							props.put(JEditBuffer.ENCODING, browser.currentEncoding);
-						}
-						jEdit.openFile(browser.getView(),
-							browser.getDirectory(),
-							path, false, props);
-					}
-					dispose();
-					break;
-				case VFSFile.DIRECTORY:
-				case VFSFile.FILESYSTEM:
-					browser.setDirectory(path);
-					break;
-				}
-			}
-		});
+		AwtRunnableQueue.INSTANCE.runAfterIoTasks(() -> {
+                    switch(type[0])
+                    {
+                        case VFSFile.FILE:
+                            if(browser.getMode() == VFSBrowser.CHOOSE_DIRECTORY_DIALOG)
+                                break;
+                            
+                            if(vfs instanceof FileVFS)
+                            {
+                                if(doFileExistsWarning(path))
+                                    break;
+                            }
+                            isOK = true;
+                            if(browser.getMode() == VFSBrowser.BROWSER_DIALOG)
+                            {
+                                Hashtable<String, Object> props = new Hashtable<String, Object>();
+                                if(browser.currentEncoding != null)
+                                {
+                                    props.put(JEditBuffer.ENCODING, browser.currentEncoding);
+                                }
+                                jEdit.openFile(browser.getView(),
+                                        browser.getDirectory(),
+                                        path, false, props);
+                            }
+                            dispose();
+                            break;
+                        case VFSFile.DIRECTORY:
+                        case VFSFile.FILESYSTEM:
+                            browser.setDirectory(path);
+                            break;
+                    }
+                });
 	} //}}}
 
 	//{{{ cancel() method
@@ -531,24 +527,20 @@ public class VFSFileChooserDialog extends EnhancedDialog
 	//{{{ IoTaskListener class
 	private class IoTaskHandler implements TaskListener
 	{
-		private final Runnable cursorStatus = new Runnable()
-		{
-			public void run()
-			{
-				int requestCount = TaskManager.instance.countIoTasks();
-				if(requestCount == 0)
-				{
-					getContentPane().setCursor(
-						Cursor.getDefaultCursor());
-				}
-				else if(requestCount >= 1)
-				{
-					getContentPane().setCursor(
-						Cursor.getPredefinedCursor(
-						Cursor.WAIT_CURSOR));
-				}
-			}
-		};
+		private final Runnable cursorStatus = () -> {
+                    int requestCount = TaskManager.instance.countIoTasks();
+                    if(requestCount == 0)
+                    {
+                        getContentPane().setCursor(
+                                Cursor.getDefaultCursor());
+                    }
+                    else if(requestCount >= 1)
+                    {
+                        getContentPane().setCursor(
+                                Cursor.getPredefinedCursor(
+                                        Cursor.WAIT_CURSOR));
+                    }
+                };
 
 		//{{{ waiting() method
 		public void waiting(Task task)

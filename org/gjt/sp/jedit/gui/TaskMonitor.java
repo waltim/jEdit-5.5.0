@@ -61,17 +61,13 @@ public class TaskMonitor extends JPanel implements TaskListener
 		panel.add(remainingCount, BorderLayout.NORTH);
 
 		model = new TaskTableModel();
-		model.addTableModelListener(new TableModelListener()
-		{
-			public void tableChanged(TableModelEvent e)
-			{
-				if (e.getType() == TableModelEvent.INSERT ||
-					e.getType() == TableModelEvent.DELETE)
-				{
-					updateTasksCount();
-				}
-			}
-		});
+		model.addTableModelListener((TableModelEvent e) -> {
+                    if (e.getType() == TableModelEvent.INSERT ||
+                            e.getType() == TableModelEvent.DELETE)
+                    {
+                        updateTasksCount();
+                    }
+                });
 		table = new JTable(model);
 		table.setRowHeight(GenericGUIUtilities.defaultRowHeight());
 		table.setDefaultRenderer(Object.class, new TaskCellRenderer());
@@ -90,13 +86,7 @@ public class TaskMonitor extends JPanel implements TaskListener
 	@Override
 	public void addNotify()
 	{
-		TaskManager.instance.visit(new TaskManager.TaskVisitor()
-		{
-			public void visit(Task task)
-			{
-				model.addTask(task);
-			}
-		});
+		TaskManager.instance.visit(model::addTask);
 		TaskManager.instance.addTaskListener(this);
 		super.addNotify();
 	} //}}}
@@ -212,14 +202,10 @@ public class TaskMonitor extends JPanel implements TaskListener
 		private TaskTableEditor()
 		{
 			button = new JButton(GUIUtilities.loadIcon(jEdit.getProperty("close-buffer.icon")));
-			button.addActionListener(new ActionListener()
-			{
-				public void actionPerformed(ActionEvent e)
-				{
-					task.cancel();
-					stopCellEditing();
-				}
-			});
+			button.addActionListener((ActionEvent e) -> {
+                            task.cancel();
+                            stopCellEditing();
+                        });
 		} //}}}
 
 		//{{{ getCellEditorValue() method
@@ -275,31 +261,23 @@ public class TaskMonitor extends JPanel implements TaskListener
 		//{{{ addTask() method
 		void addTask(final Task task)
 		{
-			ThreadUtilities.runInDispatchThread(new Runnable()
-			{
-				public void run()
-				{
-					tasks.add(task);
-					fireTableRowsInserted(tasks.size()-1, tasks.size()-1);
-				}
-			});
+			ThreadUtilities.runInDispatchThread(() -> {
+                            tasks.add(task);
+                            fireTableRowsInserted(tasks.size()-1, tasks.size()-1);
+                        });
 		} //}}}
 
 		//{{{ removeTask() method
 		void removeTask(final Task task)
 		{
-			ThreadUtilities.runInDispatchThread(new Runnable()
-			{
-				public void run()
-				{
-					int index = tasks.indexOf(task);
-					if (index != -1)
-					{
-						tasks.remove(index);
-						fireTableRowsDeleted(index,index);
-					}
-				}
-			});
+			ThreadUtilities.runInDispatchThread(() -> {
+                            int index = tasks.indexOf(task);
+                            if (index != -1)
+                            {
+                                tasks.remove(index);
+                                fireTableRowsDeleted(index,index);
+                            }
+                        });
 		} //}}}
 
 		//{{{ removeAll() method

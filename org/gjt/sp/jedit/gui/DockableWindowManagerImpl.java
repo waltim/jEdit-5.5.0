@@ -457,39 +457,35 @@ public class DockableWindowManagerImpl extends DockableWindowManager
 		// I don't know of any other way to fix this, since invoking this
 		// command from a menu results in the focus owner being the menu
 		// until the menu goes away.
-		SwingUtilities.invokeLater(new Runnable()
-		{
-			public void run()
-			{
-				/* Try to hide the last entry that was shown */
-				try
-				{
-					String dockableName = showStack.pop();
-					hideDockableWindow(dockableName);
-					return;
-				}
-				catch (Exception e) {}
-
-				Component comp = view.getFocusOwner();
-				while(comp != null)
-				{
-					//System.err.println(comp.getClass());
-					if(comp instanceof DockablePanel)
-					{
-						DockablePanel panel = (DockablePanel) comp;
-
-						PanelWindowContainer container = panel.getWindowContainer();
-
-						container.show((DockableWindowManagerImpl.Entry) null);
-						return;
-					}
-
-					comp = comp.getParent();
-				}
-
-				javax.swing.UIManager.getLookAndFeel().provideErrorFeedback(null); 
-			}
-		});
+		SwingUtilities.invokeLater(() -> {
+                    /* Try to hide the last entry that was shown */
+                    try
+                    {
+                        String dockableName = showStack.pop();
+                        hideDockableWindow(dockableName);
+                        return;
+                    }
+                    catch (Exception e) {}
+                    
+                    Component comp = view.getFocusOwner();
+                    while(comp != null)
+                    {
+                        //System.err.println(comp.getClass());
+                        if(comp instanceof DockablePanel)
+                        {
+                            DockablePanel panel = (DockablePanel) comp;
+                            
+                            PanelWindowContainer container = panel.getWindowContainer();
+                            
+                            container.show((DockableWindowManagerImpl.Entry) null);
+                            return;
+                        }
+                        
+                        comp = comp.getParent();
+                    }
+                    
+                    javax.swing.UIManager.getLookAndFeel().provideErrorFeedback(null);
+                });
 	} //}}}
 
 	//{{{ close() method
@@ -547,13 +543,9 @@ public class DockableWindowManagerImpl extends DockableWindowManager
 		JPopupMenu popup = new JPopupMenu();
 		if(dockable == null && container instanceof PanelWindowContainer)
 		{
-			ActionListener listener = new ActionListener()
-			{
-				public void actionPerformed(ActionEvent evt)
-				{
-					showDockableWindow(evt.getActionCommand());
-				}
-			};
+			ActionListener listener = (ActionEvent evt) -> {
+                            showDockableWindow(evt.getActionCommand());
+                        };
 
 			String[] dockables = ((PanelWindowContainer)
 				container).getDockables();
@@ -586,18 +578,14 @@ public class DockableWindowManagerImpl extends DockableWindowManager
 					JMenuItem moveMenuItem =
 						new JMenuItem(jEdit.getProperty("view.docking.menu-" + pos));
 
-					moveMenuItem.addActionListener(new ActionListener()
-					{
-						public void actionPerformed(ActionEvent evt)
-						{
-							jEdit.setProperty(dockable + ".dock-position", pos);
-							EditBus.send(
-								new DockableWindowUpdate(DockableWindowManagerImpl.this,
-											 DockableWindowUpdate.PROPERTIES_CHANGED,
-											 dockable));
-							showDockableWindow(dockable);
-						}
-					});
+					moveMenuItem.addActionListener((ActionEvent evt) -> {
+                                            jEdit.setProperty(dockable + ".dock-position", pos);
+                                            EditBus.send(
+                                                    new DockableWindowUpdate(DockableWindowManagerImpl.this,
+                                                            DockableWindowUpdate.PROPERTIES_CHANGED,
+                                                            dockable));
+                                            showDockableWindow(dockable);
+                                        });
 					popup.add(moveMenuItem);
 				}
 
@@ -606,29 +594,21 @@ public class DockableWindowManagerImpl extends DockableWindowManager
 
 			JMenuItem cloneMenuItem = new JMenuItem(jEdit.getProperty("view.docking.menu-clone"));
 
-			cloneMenuItem.addActionListener(new ActionListener()
-			{
-				public void actionPerformed(ActionEvent evt)
-				{
-					floatDockableWindow(dockable);
-				}
-			});
+			cloneMenuItem.addActionListener((ActionEvent evt) -> {
+                            floatDockableWindow(dockable);
+                        });
 			popup.add(cloneMenuItem);
 
 			popup.addSeparator();
 
 			JMenuItem closeMenuItem = new JMenuItem(jEdit.getProperty("view.docking.menu-close"));
 
-			closeMenuItem.addActionListener(new ActionListener()
-			{
-				public void actionPerformed(ActionEvent evt)
-				{
-					if(clone)
-						((FloatingWindowContainer)container).dispose();
-					else
-						removeDockableWindow(dockable);
-				}
-			});
+			closeMenuItem.addActionListener((ActionEvent evt) -> {
+                            if(clone)
+                                ((FloatingWindowContainer)container).dispose();
+                            else
+                                removeDockableWindow(dockable);
+                        });
 			popup.add(closeMenuItem);
 
 			if(!(clone || currentPos.equals(FLOATING)))

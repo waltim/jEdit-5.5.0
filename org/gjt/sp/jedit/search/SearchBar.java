@@ -108,26 +108,21 @@ public class SearchBar extends JToolBar
 		update();
 
 		//{{{ Create the timer used by incremental search
-		timer = new Timer(0,new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent evt)
-			{
-				if(!incrementalSearch(searchStart,searchReverse))
-				{
-					if(!incrementalSearch(
-						(searchReverse
-						? view.getBuffer().getLength()
-						: 0),searchReverse))
-					{
-						// not found at all.
-						view.getStatus().setMessageAndClear(
-							jEdit.getProperty(
-							"view.status.search-not-found"));
-					}
-				}
-			}
-		}); //}}}
+		timer = new Timer(0, (ActionEvent evt) -> {
+                    if(!incrementalSearch(searchStart,searchReverse))
+                    {
+                        if(!incrementalSearch(
+                                (searchReverse
+                                        ? view.getBuffer().getLength()
+                                        : 0),searchReverse))
+                        {
+                            // not found at all.
+                            view.getStatus().setMessageAndClear(
+                                    jEdit.getProperty(
+                                            "view.status.search-not-found"));
+                        }
+                    }
+                }); //}}}
 
 		// if 'temp' is true, hide search bar after user is done with it
 		this.isRemovable = temp;

@@ -150,13 +150,9 @@ public class DockingOptionPane extends AbstractOptionPane
 			jEdit.getBooleanProperty(AUTO_SAVE_MODE_LAYOUT_PROP, false));
 		p.add(autoSaveModeLayout);
 		autoSaveModeLayout.setEnabled(autoLoadModeLayoutProp);
-		autoLoadModeLayout.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				autoSaveModeLayout.setEnabled(autoLoadModeLayout.isSelected());
-			}
-		});
+		autoLoadModeLayout.addActionListener((ActionEvent e) -> {
+                    autoSaveModeLayout.setEnabled(autoLoadModeLayout.isSelected());
+                });
 		Box vSetSelection = Box.createVerticalBox();
 		p.add(vSetSelection);
 		Box setSelection = Box.createHorizontalBox();
@@ -167,13 +163,9 @@ public class DockingOptionPane extends AbstractOptionPane
 		setSelection.add(Box.createHorizontalStrut(6));
 		dockableSetSelection = new JComboBox<String>();
 		setSelection.add(dockableSetSelection);
-		dockableSetSelection.addItemListener(new ItemListener()
-		{
-			public void itemStateChanged(ItemEvent e)
-			{
-				windowModel.showSet((String) dockableSetSelection.getSelectedItem());
-			}
-		});
+		dockableSetSelection.addItemListener((ItemEvent e) -> {
+                    windowModel.showSet((String) dockableSetSelection.getSelectedItem());
+                });
 		setSelection.add(Box.createHorizontalStrut(6));
 		vSetSelection.add(Box.createVerticalStrut(6));
 		return p;

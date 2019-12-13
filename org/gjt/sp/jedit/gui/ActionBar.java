@@ -184,27 +184,23 @@ public class ActionBar extends JToolBar
 		if(temp)
 			view.removeToolBar(this);
 
-		SwingUtilities.invokeLater(new Runnable()
-		{
-			public void run()
-			{
-				view.getTextArea().requestFocus();
-				if(act == null)
-				{
-					if(finalCmd != null)
-					{
-						view.getStatus().setMessageAndClear(
-							jEdit.getProperty(
-							"view.action.no-completions"));
-					}
-				}
-				else
-				{
-					view.getInputHandler().setRepeatCount(repeatCount);
-					view.getInputHandler().invokeAction(act);
-				}
-			}
-		});
+		SwingUtilities.invokeLater(() -> {
+                    view.getTextArea().requestFocus();
+                    if(act == null)
+                    {
+                        if(finalCmd != null)
+                        {
+                            view.getStatus().setMessageAndClear(
+                                    jEdit.getProperty(
+                                            "view.action.no-completions"));
+                        }
+                    }
+                    else
+                    {
+                        view.getInputHandler().setRepeatCount(repeatCount);
+                        view.getInputHandler().invokeAction(act);
+                    }
+                });
 	} //}}}
 
 	//{{{ getCompletions() method
@@ -398,16 +394,12 @@ public class ActionBar extends JToolBar
 			if(temp)
 				view.removeToolBar(ActionBar.this);
 			view.getTextArea().requestFocus();
-			SwingUtilities.invokeLater(new Runnable()
-			{
-				public void run()
-				{
-					view.getTextArea().requestFocus();
-					view.getInputHandler().setRepeatCount(repeatCount);
-					view.getInputHandler().processKeyEvent(evt,
-						View.ACTION_BAR, false);
-				}
-			});
+			SwingUtilities.invokeLater(() -> {
+                            view.getTextArea().requestFocus();
+                            view.getInputHandler().setRepeatCount(repeatCount);
+                            view.getInputHandler().processKeyEvent(evt,
+                                    View.ACTION_BAR, false);
+                        });
 		}
 
 		@Override

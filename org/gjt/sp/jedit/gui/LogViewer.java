@@ -105,14 +105,9 @@ public class LogViewer extends JPanel implements DefaultFocusComponent
 		caption.add(Box.createHorizontalStrut(6));
 
 		JButton settings = new JButton(jEdit.getProperty("log-viewer.settings.label"));
-		settings.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent ae)
-			{
-				new LogSettings();
-			}
-		});
+		settings.addActionListener((ActionEvent ae) -> {
+                    new LogSettings();
+                });
 		caption.add(settings);
 
 		Log.setMaxLines(jEdit.getIntegerProperty("log-viewer.maxlines", 500));
@@ -232,14 +227,7 @@ public class LogViewer extends JPanel implements DefaultFocusComponent
 	private void scrollLaterIfRequired()
 	{
 		if (tailIsOn)
-			ThreadUtilities.runInDispatchThread(new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					scrollToTail();
-				}
-			});
+			ThreadUtilities.runInDispatchThread(this::scrollToTail);
 	} //}}}
 
 	//}}}
@@ -557,26 +545,16 @@ public class LogViewer extends JPanel implements DefaultFocusComponent
 
 					JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 					JButton okButton = new JButton(jEdit.getProperty("common.ok"));
-					okButton.addActionListener(new ActionListener()
-					{
-						@Override
-						public void actionPerformed(ActionEvent ae)
-						{
-							save();
-							LogSettings.this.setVisible(false);
-							LogSettings.this.dispose();
-						}
-					});
+					okButton.addActionListener((ActionEvent ae) -> {
+                                            save();
+                                            LogSettings.this.setVisible(false);
+                                            LogSettings.this.dispose();
+                                        });
 					JButton cancelButton = new JButton(jEdit.getProperty("common.cancel"));
-					cancelButton.addActionListener(new ActionListener()
-					{
-						@Override
-						public void actionPerformed(ActionEvent ae)
-						{
-							LogSettings.this.setVisible(false);
-							LogSettings.this.dispose();
-						}
-					});
+					cancelButton.addActionListener((ActionEvent ae) -> {
+                                            LogSettings.this.setVisible(false);
+                                            LogSettings.this.dispose();
+                                        });
 					buttonPanel.add(okButton);
 					buttonPanel.add(cancelButton);
 					addComponent(buttonPanel, GridBagConstraints.HORIZONTAL);

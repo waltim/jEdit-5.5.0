@@ -77,16 +77,12 @@ public class HelpTOCPanel extends JPanel
 		if(node == null)
 			return;
 
-		EventQueue.invokeLater(new Runnable()
-		{
-			public void run()
-			{
-				TreePath path = new TreePath(tocModel.getPathToRoot(node));
-				toc.expandPath(path);
-				toc.setSelectionPath(path);
-				toc.scrollPathToVisible(path);
-			}
-		});
+		EventQueue.invokeLater(() -> {
+                    TreePath path = new TreePath(tocModel.getPathToRoot(node));
+                    toc.expandPath(path);
+                    toc.setSelectionPath(path);
+                    toc.scrollPathToVisible(path);
+                });
 	} //}}}
 
 	//{{{ load() method
@@ -98,26 +94,22 @@ public class HelpTOCPanel extends JPanel
 		toc.setModel(empty);
 		toc.setRootVisible(true);
 
-		ThreadUtilities.runInBackground(new Runnable()
-		{
-			public void run()
-			{
-				DefaultMutableTreeNode tocRoot = new HelpTOCLoader(nodes, helpViewer.getBaseURL()).createTOC();
-				tocModel = new DefaultTreeModel(tocRoot);
-				toc.setModel(tocModel);
-				toc.setRootVisible(false);
-				for(int i = 0; i <tocRoot.getChildCount(); i++)
-				{
-					DefaultMutableTreeNode node =
-						(DefaultMutableTreeNode)
-						tocRoot.getChildAt(i);
-					toc.expandPath(new TreePath(
-						node.getPath()));
-				}
-				if(helpViewer.getShortURL() != null)
-					selectNode(helpViewer.getShortURL());
-			}
-		});
+		ThreadUtilities.runInBackground(() -> {
+                    DefaultMutableTreeNode tocRoot = new HelpTOCLoader(nodes, helpViewer.getBaseURL()).createTOC();
+                    tocModel = new DefaultTreeModel(tocRoot);
+                    toc.setModel(tocModel);
+                    toc.setRootVisible(false);
+                    for(int i = 0; i <tocRoot.getChildCount(); i++)
+                    {
+                        DefaultMutableTreeNode node =
+                                (DefaultMutableTreeNode)
+                                tocRoot.getChildAt(i);
+                        toc.expandPath(new TreePath(
+                                node.getPath()));
+                    }
+                    if(helpViewer.getShortURL() != null)
+                        selectNode(helpViewer.getShortURL());
+                });
 	} //}}}
 
 	//{{{ Private members

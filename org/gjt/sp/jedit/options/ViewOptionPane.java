@@ -137,13 +137,9 @@ public class ViewOptionPane extends AbstractOptionPane
 		sortBufferSwitcher = new JCheckBox(jEdit.getProperty(
 			"options.view.bufferswitcher.sortBuffers"));
 		sortBufferSwitcher.setSelected(jEdit.getBooleanProperty("bufferswitcher.sortBuffers", true));
-		sortBufferSwitcher.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent evt)
-			{
-				sortBufferSwitcherByName.setEnabled(sortBufferSwitcher.isSelected());
-			}
-		});
+		sortBufferSwitcher.addActionListener((ActionEvent evt) -> {
+                    sortBufferSwitcherByName.setEnabled(sortBufferSwitcher.isSelected());
+                });
 
 		addComponent(sortBufferSwitcher);
 
@@ -183,25 +179,21 @@ public class ViewOptionPane extends AbstractOptionPane
 		sortBuffers = new JCheckBox(jEdit.getProperty(
 			"options.view.sortBuffers"));
 		sortBuffers.setSelected(jEdit.getBooleanProperty("sortBuffers"));
-		sortBuffers.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent evt)
-			{
-				if (sortBuffers.isSelected())
-				{
-					sortByName.setEnabled(true);
-					sortBufferSwitcher.setEnabled(false);
-					sortBufferSwitcher.setSelected(true);
-					sortBufferSwitcherByName.setEnabled(false);
-				}
-				else
-				{
-					sortByName.setEnabled(false);
-					sortBufferSwitcher.setEnabled(true);
-					sortBufferSwitcherByName.setEnabled(true);
-				}
-			}
-		});
+		sortBuffers.addActionListener((ActionEvent evt) -> {
+                    if (sortBuffers.isSelected())
+                    {
+                        sortByName.setEnabled(true);
+                        sortBufferSwitcher.setEnabled(false);
+                        sortBufferSwitcher.setSelected(true);
+                        sortBufferSwitcherByName.setEnabled(false);
+                    }
+                    else
+                    {
+                        sortByName.setEnabled(false);
+                        sortBufferSwitcher.setEnabled(true);
+                        sortBufferSwitcherByName.setEnabled(true);
+                    }
+                });
 
 		addComponent(sortBuffers);
 

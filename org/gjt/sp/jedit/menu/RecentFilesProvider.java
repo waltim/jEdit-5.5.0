@@ -57,25 +57,17 @@ public class RecentFilesProvider implements DynamicMenuProvider
 		final View view = GUIUtilities.getView(menu);
 
 		//{{{ ActionListener...
-		ActionListener actionListener = new ActionListener()
-		{
-			public void actionPerformed(ActionEvent evt)
-			{
-				jEdit.openFile(view,evt.getActionCommand());
-				view.getStatus().setMessage(null);
-			}
-		}; //}}}
+		ActionListener actionListener = (ActionEvent evt) -> {
+                    jEdit.openFile(view,evt.getActionCommand());
+                    view.getStatus().setMessage(null);
+                }; //}}}
 
 		//{{{ ChangeListener...
-		ChangeListener changeListener = new ChangeListener()
-		{
-			public void stateChanged(ChangeEvent e)
-			{
-				JMenuItem menuItem = (JMenuItem) e.getSource();
-				
-				view.getStatus().setMessage(menuItem.isArmed()?menuItem.getActionCommand():null);
-			} 
-		}; //}}}
+		ChangeListener changeListener = (ChangeEvent e) -> {
+                    JMenuItem menuItem = (JMenuItem) e.getSource();
+                    
+                    view.getStatus().setMessage(menuItem.isArmed()?menuItem.getActionCommand():null);
+                }; //}}}
 
 		List<BufferHistory.Entry> recentVector = BufferHistory.getHistory();
 
@@ -180,13 +172,9 @@ public class RecentFilesProvider implements DynamicMenuProvider
 			}
 		}
 		JMenuItem menuItem = new JMenuItem(jEdit.getProperty("clear-recent-files.label"));
-		menuItem.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				BufferHistory.clear();
-			}
-		});
+		menuItem.addActionListener((ActionEvent e) -> {
+                    BufferHistory.clear();
+                });
 		menu.addSeparator();
 		menu.add(menuItem);
 	} //}}}

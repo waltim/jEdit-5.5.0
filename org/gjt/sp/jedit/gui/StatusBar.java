@@ -191,36 +191,32 @@ public class StatusBar extends JPanel
 	//{{{ TaskListener implementation
 	private class TaskHandler implements TaskListener
 	{
-		private final Runnable statusLineIo = new Runnable()
-		{
-			public void run()
-			{
-				// don't obscure existing message
-				if(!currentMessageIsIO && message != null && !"".equals(message.getText().trim()))
-					return;
-
-				int requestCount = TaskManager.instance.countIoTasks();
-				if(requestCount == 0)
-				{
-					setMessageAndClear(jEdit.getProperty(
-						"view.status.io.done"));
-					currentMessageIsIO = true;
-				}
-				else if(requestCount == 1)
-				{
-					setMessage(jEdit.getProperty(
-						"view.status.io-1"));
-					currentMessageIsIO = true;
-				}
-				else
-				{
-					Object[] args = {requestCount};
-					setMessage(jEdit.getProperty(
-						"view.status.io",args));
-					currentMessageIsIO = true;
-				}
-			}
-		};
+		private final Runnable statusLineIo = () -> {
+                    // don't obscure existing message
+                    if(!currentMessageIsIO && message != null && !"".equals(message.getText().trim()))
+                        return;
+                    
+                    int requestCount = TaskManager.instance.countIoTasks();
+                    if(requestCount == 0)
+                    {
+                        setMessageAndClear(jEdit.getProperty(
+                                "view.status.io.done"));
+                        currentMessageIsIO = true;
+                    }
+                    else if(requestCount == 1)
+                    {
+                        setMessage(jEdit.getProperty(
+                                "view.status.io-1"));
+                        currentMessageIsIO = true;
+                    }
+                    else
+                    {
+                        Object[] args = {requestCount};
+                        setMessage(jEdit.getProperty(
+                                "view.status.io",args));
+                        currentMessageIsIO = true;
+                    }
+                };
 
 		//{{{ waiting() method
 		public void waiting(Task task)
@@ -279,15 +275,11 @@ public class StatusBar extends JPanel
 	{
 		setMessage(message);
 
-		tempTimer = new Timer(0,new ActionListener()
-		{
-			public void actionPerformed(ActionEvent evt)
-			{
-				// so if view is closed in the meantime...
-				if(isShowing())
-					setMessage(null);
-			}
-		});
+		tempTimer = new Timer(0, (ActionEvent evt) -> {
+                    // so if view is closed in the meantime...
+                    if(isShowing())
+                        setMessage(null);
+                });
 
 		tempTimer.setInitialDelay(10000);
 		tempTimer.setRepeats(false);

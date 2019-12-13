@@ -149,14 +149,9 @@ class InstallPanel extends JPanel implements EBComponent
 		infoPane.setPreferredSize(new Dimension(500,100));
 		split.setBottomComponent(infoPane);
 
-		EventQueue.invokeLater(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				split.setDividerLocation(0.75);
-			}
-		});
+		EventQueue.invokeLater(() -> {
+                    split.setDividerLocation(0.75);
+                });
 
 		searchField = new JTextField();
 		searchField.addKeyListener(new KeyAdapter()
@@ -223,16 +218,10 @@ class InstallPanel extends JPanel implements EBComponent
 		});
 		hideInstalled = !updates;
 		final JCheckBox hideInstalledCB = new JCheckBox("Hide installed plugins", hideInstalled);
-		hideInstalledCB.addActionListener(new ActionListener()
-		{
-
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				InstallPanel.this.hideInstalled = hideInstalledCB.isSelected();
-				updateModel();
-			}
-		});
+		hideInstalledCB.addActionListener((ActionEvent e) -> {
+                    InstallPanel.this.hideInstalled = hideInstalledCB.isSelected();
+                    updateModel();
+                });
 		hideInstalledCB.setAlignmentX(0);
 
 		Box filterBox = Box.createHorizontalBox();
@@ -333,13 +322,7 @@ class InstallPanel extends JPanel implements EBComponent
 		else
 		{
 			layout.show(InstallPanel.this, "INSTALL");
-			EventQueue.invokeLater(new Runnable()
-			{
-				public void run()
-				{
-					searchField.requestFocusInWindow();
-				}
-			});
+			EventQueue.invokeLater(searchField::requestFocusInWindow);
 		}
 		isLoading = false;
 	} //}}}

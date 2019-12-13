@@ -77,14 +77,10 @@ public class MarkersProvider implements DynamicMenuProvider
 
 			JMenuItem mi = new MarkersMenuItem(buffer,
 				lineNo,marker.getShortcut());
-			mi.addActionListener(new ActionListener()
-			{
-				public void actionPerformed(ActionEvent evt)
-				{
-					view.getTextArea().setCaretPosition(
-						marker.getPosition());
-				}
-			});
+			mi.addActionListener((ActionEvent evt) -> {
+                            view.getTextArea().setCaretPosition(
+                                    marker.getPosition());
+                        });
 			current.add(mi);
 		}
 	} //}}}

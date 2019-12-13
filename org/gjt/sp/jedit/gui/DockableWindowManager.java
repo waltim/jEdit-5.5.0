@@ -710,13 +710,7 @@ public abstract class DockableWindowManager extends JPanel
 			if (layoutDir == null)
 				return null;
 			File dir = new File(layoutDir);
-			File[] files = dir.listFiles(new FilenameFilter()
-			{
-				public boolean accept(File dir, String name)
-				{
-					return name.endsWith(".xml");
-				}
-			});
+			File[] files = dir.listFiles((File dir1, String name1) -> name1.endsWith(".xml"));
 			String[] layouts = new String[files.length];
 			for (int i = 0; i < files.length; i++)
 				layouts[i] = fileToLayout(files[i].getName());

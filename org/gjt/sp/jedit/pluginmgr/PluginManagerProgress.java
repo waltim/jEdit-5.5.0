@@ -80,13 +80,9 @@ class PluginManagerProgress extends JDialog implements ProgressObserver
 	 */
 	public void setValue(final long value)
 	{
-		SwingUtilities.invokeLater(new Runnable()
-			{
-				public void run()
-				{
-					progress.setValue(valueSoFar + (int) value);
-				}
-			});
+		SwingUtilities.invokeLater(() -> {
+                    progress.setValue(valueSoFar + (int) value);
+                });
 	} //}}}
 
 	//{{{ setMaximum() method
@@ -119,26 +115,16 @@ class PluginManagerProgress extends JDialog implements ProgressObserver
 		{
 			if(done == count)
 			{
-				SwingUtilities.invokeAndWait(new Runnable()
-				{
-					public void run()
-					{
-						dispose();
-					}
-				});
+				SwingUtilities.invokeAndWait(this::dispose);
 			}
 			else
 			{
-				SwingUtilities.invokeAndWait(new Runnable()
-				{
-					public void run()
-					{
-						valueSoFar += roster.getOperation(done - 1)
-							.getMaximum();
-						progress.setValue(valueSoFar);
-						done++;
-					}
-				});
+				SwingUtilities.invokeAndWait(() -> {
+                                    valueSoFar += roster.getOperation(done - 1)
+                                            .getMaximum();
+                                    progress.setValue(valueSoFar);
+                                    done++;
+                                });
 			}
 		}
 		catch(Exception e)

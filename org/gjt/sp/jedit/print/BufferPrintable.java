@@ -112,13 +112,9 @@ class BufferPrintable implements Printable
 		{
 			Log.log(Log.ERROR,this,e);
 			final String[] args = { e.toString() };
-			SwingUtilities.invokeLater(new Runnable()
-			{
-				public void run()
-				{
-					GUIUtilities.error(view,"print-error",args);
-				}
-			});
+			SwingUtilities.invokeLater(() -> {
+                            GUIUtilities.error(view,"print-error",args);
+                        });
 		}
 	} //}}}
 
