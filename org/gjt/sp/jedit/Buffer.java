@@ -240,11 +240,7 @@ public class Buffer extends JEditBuffer
 			loadAutosave = false;
 
 		//{{{ Do some stuff once loading is finished
-		Runnable runnable = new Runnable()
-		{
-			public void run()
-			{
-				String newPath = getStringProperty(
+		Runnable runnable = ()-> { String newPath = getStringProperty(
 					BufferIORequest.NEW_PATH);
 				Segment seg = (Segment)getProperty(
 					BufferIORequest.LOAD_DATA);
@@ -296,9 +292,7 @@ public class Buffer extends JEditBuffer
 						view,BufferUpdate.LOADED));
 					//EditBus.send(new BufferUpdate(Buffer.this,
 					//	view,BufferUpdate.MARKERS_CHANGED));
-				}
-			}
-		}; //}}}
+				}}; //}}}
 
 		if(getFlag(TEMPORARY))
 			runnable.run();
@@ -633,18 +627,12 @@ public class Buffer extends JEditBuffer
 		}
 
 		// Once save is complete, do a few other things
-		AwtRunnableQueue.INSTANCE.runAfterIoTasks(new Runnable()
-			{
-				public void run()
-				{
-					setPerformingIO(false);
+		AwtRunnableQueue.INSTANCE.runAfterIoTasks(()-> { setPerformingIO(false);
 					setProperty("overwriteReadonly",null);
 					finishSaving(view,oldPath,oldSymlinkPath,
 						newPath,rename,getBooleanProperty(
 							BufferIORequest.ERROR_OCCURRED));
-					updateMarkersFile(view);
-				}
-			});
+					updateMarkersFile(view);});
 
 		return true;
 	} //}}}
@@ -2044,13 +2032,8 @@ public class Buffer extends JEditBuffer
 
 			// show this message when all I/O requests are
 			// complete
-			AwtRunnableQueue.INSTANCE.runAfterIoTasks(new Runnable()
-			{
-				public void run()
-				{
-					GUIUtilities.message(view,"autosave-loaded",args);
-				}
-			});
+			AwtRunnableQueue.INSTANCE.runAfterIoTasks(()-> { GUIUtilities.message(view,"autosave-loaded",args);
+				});
 
 			return true;
 		}

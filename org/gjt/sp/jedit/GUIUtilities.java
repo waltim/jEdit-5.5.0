@@ -1954,13 +1954,8 @@ public class GUIUtilities
 		// Have to do it in the EDT, since it creates gui components
 		try
 		{
-			SwingUtilities.invokeAndWait(new Runnable()
-			{
-				public void run()
-				{
-					splash = new SplashScreen();
-				}
-			});
+			SwingUtilities.invokeAndWait(()-> { splash = new SplashScreen();
+				});
 		}
 		catch (Exception e)
 		{

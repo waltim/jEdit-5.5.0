@@ -1122,13 +1122,8 @@ public class VFSBrowser extends JPanel implements DefaultFocusComponent,
 		setDirectory(MiscUtilities.getParentOfPath(path));
 		// Do not change this until all VFS Browser tasks are
 		// done in ThreadUtilities
-		AwtRunnableQueue.INSTANCE.runAfterIoTasks(new Runnable()
-		{
-			public void run()
-			{
-				browserView.getTable().selectFile(path);
-			}
-		});
+		AwtRunnableQueue.INSTANCE.runAfterIoTasks(()-> { browserView.getTable().selectFile(path);
+			});
 	} //}}}
 
 	//{{{ createPluginsMenu() method
@@ -1633,13 +1628,8 @@ check_selected:
 			{
 				// Do not change this until all VFS Browser tasks are
 				// done in ThreadUtilities
-				AwtRunnableQueue.INSTANCE.runAfterIoTasks(new Runnable()
-				{
-					public void run()
-					{
-						maybeReloadRequestRunning = false;
-					}
-				});
+				AwtRunnableQueue.INSTANCE.runAfterIoTasks(()-> { maybeReloadRequestRunning = false;
+					});
 			}
 		}
 	} //}}}

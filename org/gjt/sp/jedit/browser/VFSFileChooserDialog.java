@@ -178,11 +178,7 @@ public class VFSFileChooserDialog extends EnhancedDialog
 
 		ThreadUtilities.runInBackground(new GetFileTypeRequest(
 			vfs,session,path,type));
-		AwtRunnableQueue.INSTANCE.runAfterIoTasks(new Runnable()
-		{
-			public void run()
-			{
-				switch(type[0])
+		AwtRunnableQueue.INSTANCE.runAfterIoTasks(()-> { switch(type[0])
 				{
 				case VFSFile.FILE:
 					if(browser.getMode() == VFSBrowser.CHOOSE_DIRECTORY_DIALOG)
@@ -212,8 +208,7 @@ public class VFSFileChooserDialog extends EnhancedDialog
 					browser.setDirectory(path);
 					break;
 				}
-			}
-		});
+			});
 	} //}}}
 
 	//{{{ cancel() method
@@ -531,11 +526,7 @@ public class VFSFileChooserDialog extends EnhancedDialog
 	//{{{ IoTaskListener class
 	private class IoTaskHandler implements TaskListener
 	{
-		private final Runnable cursorStatus = new Runnable()
-		{
-			public void run()
-			{
-				int requestCount = TaskManager.instance.countIoTasks();
+		private final Runnable cursorStatus = ()-> { int requestCount = TaskManager.instance.countIoTasks();
 				if(requestCount == 0)
 				{
 					getContentPane().setCursor(
@@ -546,9 +537,7 @@ public class VFSFileChooserDialog extends EnhancedDialog
 					getContentPane().setCursor(
 						Cursor.getPredefinedCursor(
 						Cursor.WAIT_CURSOR));
-				}
-			}
-		};
+				}};
 
 		//{{{ waiting() method
 		public void waiting(Task task)

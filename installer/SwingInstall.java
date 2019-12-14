@@ -393,30 +393,18 @@ public class SwingInstall extends JFrame
 					//everything is perfect, clean label
 					if(message.getParent()!=null)
 					{
-						SwingUtilities.invokeLater(new Runnable()
-							{
-								public void run()
-								{
-									parent.remove(message);
+						SwingUtilities.invokeLater(()-> { parent.remove(message);
 									parent.revalidate();
-									parent.repaint();
-								}
-							});
+									parent.repaint();});
 					}
 				}
 				else
 				{
 					if(message.getParent()==null)
 					{
-						SwingUtilities.invokeLater(new Runnable()
-							{
-								public void run()
-								{
-									parent.add(message,pos);
+						SwingUtilities.invokeLater(()-> { parent.add(message,pos);
 									parent.revalidate();
-									parent.repaint();
-								}
-							});
+									parent.repaint();});
 					}
 					else message.repaint();
 				}
@@ -505,13 +493,8 @@ public class SwingInstall extends JFrame
 				OperatingSystem.getOperatingSystem()
 				.getInstallDirectory(appName,appVersion));
 
-			installDir.addFocusListener(new FocusAdapter()
-				{
-					public void focusLost(FocusEvent fe)
-					{
-						nextButton.setEnabled(isOK());
-					}
-				});
+			installDir.addFocusListener((FocusEvent fe)->{ nextButton.setEnabled(isOK());
+					});
 			for(int i = 0; i < osTasks.length; i++)
 			{
 				OperatingSystem.OSTask osTask = osTasks[i];
@@ -709,27 +692,17 @@ public class SwingInstall extends JFrame
 
 		public void setMaximum(final int max)
 		{
-			SwingUtilities.invokeLater(new Runnable()
-			{
-				public void run()
-				{
-					progress.setMaximum(max);
-				}
-			});
+			SwingUtilities.invokeLater(()-> { progress.setMaximum(max);
+				});
 		}
 
 		public void advance(final int value)
 		{
 			try
 			{
-				SwingUtilities.invokeAndWait(new Runnable()
-				{
-					public void run()
-					{
-						progress.setValue(progress
+				SwingUtilities.invokeAndWait(()-> { progress.setValue(progress
 							.getValue() + value);
-					}
-				});
+					});
 				Thread.yield();
 			}
 			catch(Exception e)
@@ -739,41 +712,24 @@ public class SwingInstall extends JFrame
 
 		public void done()
 		{
-			SwingUtilities.invokeLater(new Runnable()
-			{
-				public void run()
-				{
-					currentPage++;
-					pageChanged();
-				}
-			});
+			SwingUtilities.invokeLater(()-> { currentPage++;
+					pageChanged();});
 		}
 
 		public void error(final String message)
 		{
-			SwingUtilities.invokeLater(new Runnable()
-			{
-				public void run()
-				{
-					dispose();
+			SwingUtilities.invokeLater(()-> { dispose();
 					JOptionPane.showMessageDialog(null,
 						message,
 						"Installation aborted",
 						JOptionPane.ERROR_MESSAGE);
-					System.exit(1);
-				}
-			});
+					System.exit(1);});
 		}
 
 		public void message(final String message)
 		{
-			SwingUtilities.invokeLater(new Runnable()
-			{
-				public void run()
-				{
-					progress.setString(message);
-				}
-			});
+			SwingUtilities.invokeLater(()-> { progress.setString(message);
+				});
 		}
 
 		public void setThread(InstallThread thread)

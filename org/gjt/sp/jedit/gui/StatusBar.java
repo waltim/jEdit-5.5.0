@@ -191,12 +191,7 @@ public class StatusBar extends JPanel
 	//{{{ TaskListener implementation
 	private class TaskHandler implements TaskListener
 	{
-		private final Runnable statusLineIo = new Runnable()
-		{
-			public void run()
-			{
-				// don't obscure existing message
-				if(!currentMessageIsIO && message != null && !"".equals(message.getText().trim()))
+		private final Runnable statusLineIo = ()-> { if(!currentMessageIsIO && message != null && !"".equals(message.getText().trim()))
 					return;
 
 				int requestCount = TaskManager.instance.countIoTasks();
@@ -218,9 +213,7 @@ public class StatusBar extends JPanel
 					setMessage(jEdit.getProperty(
 						"view.status.io",args));
 					currentMessageIsIO = true;
-				}
-			}
-		};
+				}};
 
 		//{{{ waiting() method
 		public void waiting(Task task)
@@ -279,15 +272,9 @@ public class StatusBar extends JPanel
 	{
 		setMessage(message);
 
-		tempTimer = new Timer(0,new ActionListener()
-		{
-			public void actionPerformed(ActionEvent evt)
-			{
-				// so if view is closed in the meantime...
-				if(isShowing())
+		tempTimer = new Timer(0,(ActionEvent evt)->{ if(isShowing())
 					setMessage(null);
-			}
-		});
+			});
 
 		tempTimer.setInitialDelay(10000);
 		tempTimer.setRepeats(false);

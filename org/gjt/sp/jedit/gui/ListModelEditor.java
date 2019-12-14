@@ -32,11 +32,7 @@ public class ListModelEditor
 		table.setRowHeight(GenericGUIUtilities.defaultRowHeight());
 		table.getColumnModel().getColumn(0).setPreferredWidth(GenericGUIUtilities.defaultColumnWidth());
 
-		table.addKeyListener(new KeyAdapter()
-		{
-			public void keyPressed(KeyEvent e)
-			{
-				int[] selRows = table.getSelectedRows();
+		table.addKeyListener((KeyEvent e)->{ int[] selRows = table.getSelectedRows();
 				if (selRows.length == 0)
 				{
 					return;
@@ -82,9 +78,7 @@ public class ListModelEditor
 							tableModel.moveRow(row, row, to);
 						}
 						break;
-				}
-			}
-		});
+				}});
 		int result = JOptionPane.showConfirmDialog(null, table, "Change "
 		    + jEdit.getProperty("history.caption"), JOptionPane.OK_CANCEL_OPTION);
 		if (result == JOptionPane.OK_OPTION)

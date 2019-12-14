@@ -100,11 +100,7 @@ public class SearchDialog extends EnhancedDialog
 		}
 		else
 		{
-			SwingUtilities.invokeLater(new Runnable()
-			{
-				public void run()
-				{
-					dialog.setVisible(true);
+			SwingUtilities.invokeLater(()-> { dialog.setVisible(true);
 					dialog.toFront();
 
 					// Ensure that the dialog gets the focus. Just bringing
@@ -113,9 +109,7 @@ public class SearchDialog extends EnhancedDialog
 
 					// Given that the dialog has the focus, set the focus
 					// to the 'find' field.
-					dialog.find.requestFocusInWindow();
-				}
-			});
+					dialog.find.requestFocusInWindow();});
 		}
 	} //}}}
 

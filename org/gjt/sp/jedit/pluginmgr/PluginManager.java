@@ -85,14 +85,8 @@ public class PluginManager extends JFrame
 	{
 		if(!queuedUpdate)
 		{
-			SwingUtilities.invokeLater(new Runnable()
-			{
-				public void run()
-				{
-					queuedUpdate = false;
-					manager.update();
-				}
-			});
+			SwingUtilities.invokeLater(()-> { queuedUpdate = false;
+					manager.update();});
 			queuedUpdate = true;
 		}
 	} //}}}
@@ -266,13 +260,8 @@ public class PluginManager extends JFrame
 				{
 					downloadingPluginList = false;
 				}
-				ThreadUtilities.runInDispatchThread(new Runnable()
-				{
-					public void run()
-					{
-						pluginListUpdated();
-					}
-				});
+				ThreadUtilities.runInDispatchThread(()-> { pluginListUpdated();
+					});
 			}
 		});
 

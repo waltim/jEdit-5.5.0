@@ -110,11 +110,7 @@ public class EditModesPane extends AbstractOptionPane
 		deleteSelectedButton = new JButton( jEdit.getProperty("options.editing.modes.deleteSelected", "Delete Selected") );	
 		deleteSelectedButton.setEnabled(false);
 		pingPongList.addButton( deleteSelectedButton );
-		deleteSelectedButton.addActionListener( new ActionListener(){
-
-				public void actionPerformed( ActionEvent ae )
-				{
-					List<Mode> modes = pingPongList.getRightSelectedValues();
+		deleteSelectedButton.addActionListener( (ActionEvent ae )->{ List<Mode> modes = pingPongList.getRightSelectedValues();
 					StringBuilder sb = new StringBuilder();
 					sb.append(jEdit.getProperty("options.editing.modes.Delete_these_modes?", "Delete these modes?")).append('\n');
 					for (Mode m : modes) 
@@ -141,10 +137,7 @@ public class EditModesPane extends AbstractOptionPane
 							}
 						}
 						reloadLists(null);
-					}
-				}
-			}
-		);
+					}});
 		addComponent( pingPongList, BOTH );
 		addSeparator();
 		// add mode panel

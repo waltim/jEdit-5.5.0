@@ -324,23 +324,14 @@ public class PluginManagerOptionPane extends AbstractOptionPane
 					if (download)
 					{
 						Log.log(Log.ERROR,this,ex);
-						ThreadUtilities.runInDispatchThread(new Runnable()
-						{
-							public void run()
-							{
-								GUIUtilities.error(PluginManagerOptionPane.this,
+						ThreadUtilities.runInDispatchThread(()-> { GUIUtilities.error(PluginManagerOptionPane.this,
 								"ioerror",new String[] { ex.toString() });
-							}
-						});
+							});
 
 					}
 				}
 
-				ThreadUtilities.runInDispatchThread(new Runnable()
-				{
-					public void run()
-					{
-						miraModel.setList(mirrors);
+				ThreadUtilities.runInDispatchThread(()-> { miraModel.setList(mirrors);
 
 						String id = jEdit.getProperty("plugin-manager.mirror.id");
 						int size = miraModel.getSize();
@@ -355,22 +346,14 @@ public class PluginManagerOptionPane extends AbstractOptionPane
 						if (size == 0)
 						{
 							miraList.clearSelection();
-						}
-					}
-				});
+						}});
 
 				setValue(3L);
 			}
 			finally
 			{
-				ThreadUtilities.runInDispatchThread(new Runnable()
-				{
-					public void run()
-					{
-						updateMirrors.setEnabled(true);
-						updateStatus.setText(null);
-					}
-				});
+				ThreadUtilities.runInDispatchThread(()-> { updateMirrors.setEnabled(true);
+						updateStatus.setText(null);});
 			}
 		} //}}}
 

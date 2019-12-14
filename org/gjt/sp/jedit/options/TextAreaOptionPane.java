@@ -62,14 +62,8 @@ public class TextAreaOptionPane extends AbstractOptionPane
 		fontSubst = new JCheckBox(jEdit.getProperty("options.textarea.fontSubst"));
 		fontSubst.setToolTipText(jEdit.getProperty("options.textarea.fontSubst.tooltip"));
 		fontSubst.setSelected(jEdit.getBooleanProperty("view.enableFontSubst"));
-		fontSubst.addActionListener(new ActionListener()
-			{
-				public void actionPerformed(ActionEvent evt)
-				{
-					fontSubstList.setVisible(fontSubst.isSelected());
-					fontSubstSystemFonts.setVisible(fontSubst.isSelected());
-				}
-			});
+		fontSubst.addActionListener((ActionEvent evt)->{ fontSubstList.setVisible(fontSubst.isSelected());
+					fontSubstSystemFonts.setVisible(fontSubst.isSelected());});
 		addComponent(fontSubst);
 
 		fontSubstList = new FontList();
@@ -79,11 +73,7 @@ public class TextAreaOptionPane extends AbstractOptionPane
 		fontSubstSystemFonts = new JCheckBox(jEdit.getProperty("options.textarea.fontSubstSystemFonts"));
 		fontSubstSystemFonts.setSelected(jEdit.getBooleanProperty("view.enableFontSubstSystemFonts"));
 		fontSubstSystemFonts.setVisible(fontSubst.isSelected());
-		fontSubstSystemFonts.addActionListener(new ActionListener()
-			{
-				public void actionPerformed(ActionEvent evt)
-				{
-					if (!fontSubstSystemFonts.isSelected()
+		fontSubstSystemFonts.addActionListener((ActionEvent evt)->{ if (!fontSubstSystemFonts.isSelected()
 						&& (fontSubstList.listSize() == 0))
 					{
 						JOptionPane.showMessageDialog(fontSubstSystemFonts.getParent(),
@@ -91,8 +81,7 @@ public class TextAreaOptionPane extends AbstractOptionPane
 							jEdit.getProperty("options.textarea.fontSubstWarning.label"),
 							JOptionPane.WARNING_MESSAGE);
 					}
-				}
-			});
+				});
 		addComponent(fontSubstSystemFonts, GridBagConstraints.HORIZONTAL);
 
 		/* Anti-aliasing */
@@ -101,15 +90,9 @@ public class TextAreaOptionPane extends AbstractOptionPane
 		antiAlias.setToolTipText(jEdit.getProperty("options.textarea.antiAlias.tooltip"));
 		AntiAlias antiAliasValue = new AntiAlias(jEdit.getProperty("view.antiAlias"));
 		font.setAntiAliasEnabled(antiAliasValue.val()>0);
-		antiAlias.addActionListener(new ActionListener()
-			{
-				public void actionPerformed(ActionEvent evt)
-				{
-					int idx = antiAlias.getSelectedIndex();
+		antiAlias.addActionListener((ActionEvent evt)->{ int idx = antiAlias.getSelectedIndex();
 					font.setAntiAliasEnabled(idx > 0);
-					font.repaint();
-				}
-			});
+					font.repaint();});
 		antiAlias.setSelectedIndex(antiAliasValue.val());
 		addComponent(jEdit.getProperty("options.textarea"+ ".antiAlias"), antiAlias);
 

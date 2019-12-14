@@ -416,10 +416,7 @@ public class VFSManager
 		{
 			try
 			{
-				EventQueue.invokeAndWait(new Runnable() {
-					public void run()
-					{
-						String caption = jEdit.getProperty(
+				EventQueue.invokeAndWait(()-> { String caption = jEdit.getProperty(
 							"ioerror.caption" + (errors.size() == 1
 							? "-1" : ""),new Integer[] {
 							Integer.valueOf(errors.size())});
@@ -428,9 +425,7 @@ public class VFSManager
 							? frame
 							: jEdit.getFirstView(),
 							jEdit.getProperty("ioerror.title"),
-							caption,errors,false);
-					}
-				});
+							caption,errors,false);});
 			}
 			catch (InterruptedException ie)
 			{

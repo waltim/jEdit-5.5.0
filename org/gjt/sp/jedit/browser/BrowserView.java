@@ -83,15 +83,10 @@ class BrowserView extends JPanel
 			parentScroller, tableScroller);
 		splitPane.setOneTouchExpandable(true);
 
-		EventQueue.invokeLater(new Runnable()
-		{
-			public void run()
-			{
-				parentDirectories.ensureIndexIsVisible(
+		EventQueue.invokeLater(()-> { parentDirectories.ensureIndexIsVisible(
 					parentDirectories.getModel()
 					.getSize());
-			}
-		});
+			});
 
 		if(browser.isMultipleSelectionEnabled())
 			table.getSelectionModel().setSelectionMode(
@@ -168,15 +163,9 @@ class BrowserView extends JPanel
 		}
 
 		final Object[] loadInfo = new Object[2];
-		Runnable awtRunnable = new Runnable()
-		{
-			public void run()
-			{
-				browser.directoryLoaded(node,loadInfo,addToHistory);
+		Runnable awtRunnable = ()-> { browser.directoryLoaded(node,loadInfo,addToHistory);
 				if (delayedAWTTask != null)
-					delayedAWTTask.run();
-			}
-		};
+					delayedAWTTask.run();};
 		ThreadUtilities.runInBackground(new ListDirectoryBrowserTask(browser,
 			session, vfs, path, loadInfo, awtRunnable));
 	} //}}}
@@ -371,16 +360,10 @@ class BrowserView extends JPanel
 				// we use SwingUtilities.invokeLater()
 				// so that the action is executed before
 				// the popup is hidden.
-				EventQueue.invokeLater(new Runnable()
-				{
-					public void run()
-					{
-						int index = parentDirectories
+				EventQueue.invokeLater(()-> { int index = parentDirectories
 							.getModel()
 							.getSize() - 1;
-						parentDirectories.setSelectedIndex(index);
-					}
-				});
+						parentDirectories.setSelectedIndex(index);});
 			}
 		});
 		GenericGUIUtilities.showPopupMenu(popup,comp,point.x,point.y);

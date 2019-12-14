@@ -209,11 +209,7 @@ public class HelpSearchPanel extends JPanel
 			final String text = searchField.getText();
 			final java.util.List<Result> resultModel = new ArrayList<Result>();
 
-			ThreadUtilities.runInBackground(new Runnable()
-			{
-				public void run()
-				{
-					StringTokenizer st = new StringTokenizer(text,",.;:-? ");
+			ThreadUtilities.runInBackground(()-> { StringTokenizer st = new StringTokenizer(text,",.;:-? ");
 
 					// we later use this to compute a relative ranking
 					int maxRank = 0;
@@ -265,11 +261,7 @@ public class HelpSearchPanel extends JPanel
 						Collections.sort(resultModel,new ResultCompare());
 					}
 
-					EventQueue.invokeLater(new Runnable()
-					{
-						public void run()
-						{
-							if(resultModel.isEmpty())
+					EventQueue.invokeLater(()-> { if(resultModel.isEmpty())
 							{
 								results.setListData(new Result[] { 
 										new Result(jEdit.getProperty("helpviewer.no-results")) 
@@ -279,10 +271,7 @@ public class HelpSearchPanel extends JPanel
 							}
 							else
 								results.setListData(resultModel.toArray(new Result[resultModel.size()]));
-						}
-					});
-				}
-			});
+						});});
 
 
 

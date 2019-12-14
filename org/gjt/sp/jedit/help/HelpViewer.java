@@ -670,13 +670,8 @@ public class HelpViewer extends JFrame implements HelpViewerInterface, HelpHisto
                         {
 							JPopupMenu popup = new JPopupMenu();
 							JMenuItem copy = popup.add(jEdit.getProperty("helpviewer.copy-link.label"));
-							copy.addActionListener(new ActionListener(){
-								public void actionPerformed(ActionEvent e)
-								{
-									StringSelection url = new StringSelection(href);
-									Toolkit.getDefaultToolkit().getSystemClipboard().setContents(url, url);
-								}
-							});
+							copy.addActionListener((ActionEvent e)->{ StringSelection url = new StringSelection(href);
+									Toolkit.getDefaultToolkit().getSystemClipboard().setContents(url, url);});
 							popup.show(viewer, me.getX(), me.getY());
                         }
                     }

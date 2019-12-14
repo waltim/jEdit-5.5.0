@@ -198,14 +198,7 @@ public class PrinterDialog extends JDialog implements ListSelectionListener
 
     private ActionListener getPreviewButtonListener()
     {
-        return new ActionListener()
-        {
-
-            public void actionPerformed( ActionEvent ae )
-            {
-
-                // check margins and so on
-                String checkMarginsMessage = pageSetupPanel.recalculate();
+        return (ActionEvent ae )->{ String checkMarginsMessage = pageSetupPanel.recalculate();
                 if ( checkMarginsMessage != null )
                 {
                     JOptionPane.showMessageDialog( PrinterDialog.this, checkMarginsMessage, jEdit.getProperty( "print-error.title" ), JOptionPane.ERROR_MESSAGE );
@@ -241,22 +234,13 @@ public class PrinterDialog extends JDialog implements ListSelectionListener
                     return;
                 }
 
-                new PrintPreview( view, view.getBuffer(), PrinterDialog.this.getPrintService(), PrinterDialog.this.attributes );
-            }
-        };
+                new PrintPreview( view, view.getBuffer(), PrinterDialog.this.getPrintService(), PrinterDialog.this.attributes );};
     }
 
 
     private ActionListener getOkButtonListener()
     {
-        return new ActionListener()
-        {
-
-            public void actionPerformed( ActionEvent ae )
-            {
-
-                // check margins and so on
-                String checkMarginsMessage = pageSetupPanel.recalculate();
+        return (ActionEvent ae )->{ String checkMarginsMessage = pageSetupPanel.recalculate();
                 if ( checkMarginsMessage != null )
                 {
                     JOptionPane.showMessageDialog( PrinterDialog.this, checkMarginsMessage, jEdit.getProperty( "print-error.title" ), JOptionPane.ERROR_MESSAGE );
@@ -332,24 +316,15 @@ public class PrinterDialog extends JDialog implements ListSelectionListener
                  * }
                  */
                 PrinterDialog.this.setVisible( false );
-                PrinterDialog.this.dispose();
-            }
-        };
+                PrinterDialog.this.dispose();};
     }
 
 
     private ActionListener getCancelButtonListener()
     {
-        return new ActionListener()
-        {
-
-            public void actionPerformed( ActionEvent ae )
-            {
-                PrinterDialog.this.setVisible( false );
+        return (ActionEvent ae )->{ PrinterDialog.this.setVisible( false );
                 PrinterDialog.this.dispose();
-                canceled = true;
-            }
-        };
+                canceled = true;};
     }
 
 
@@ -821,35 +796,14 @@ public class PrinterDialog extends JDialog implements ListSelectionListener
             
             // install listeners
             printers.addListSelectionListener( PrinterDialog.this );
-            allPages.addActionListener( new ActionListener()
-            {
-
-                    public void actionPerformed( ActionEvent ae )
-                    {
-                        pagesField.setEnabled( pages.isSelected() );
-                    }
-                }
-            );
-            pages.addActionListener( new ActionListener()
-            {
-
-                    public void actionPerformed( ActionEvent ae )
-                    {
-                        pagesField.setEnabled( pages.isSelected() );
-                    }
-                }
-            );
-            copies.addChangeListener( new ChangeListener()
-            {
-
-                    public void stateChanged( ChangeEvent e )
-                    {
-                        JSpinner spinner = ( JSpinner )e.getSource();
+            allPages.addActionListener( (ActionEvent ae )->{ pagesField.setEnabled( pages.isSelected() );
+                    });
+            pages.addActionListener( (ActionEvent ae )->{ pagesField.setEnabled( pages.isSelected() );
+                    });
+            copies.addChangeListener( (ChangeEvent e )->{ JSpinner spinner = ( JSpinner )e.getSource();
                         int value = ( int )spinner.getValue();
                         collate.setEnabled( value > 1 );
-                        collate.setSelected( value > 1 );
-                    }
-                } );
+                        collate.setSelected( value > 1 );});
             PrintService defaultPrintService = PrintServiceLookup.lookupDefaultPrintService();
             // choose last used printer first, default printer if no last used, or first
             // item in print service list otherwise
@@ -1112,37 +1066,15 @@ public class PrinterDialog extends JDialog implements ListSelectionListener
             add( content );
             
             // add listeners
-            pagesPerSide.addActionListener( new ActionListener()
-            {
-
-                    public void actionPerformed( ActionEvent ae )
-                    {
-                        NumberUp nu = ( NumberUp )pagesPerSide.getSelectedItem();
+            pagesPerSide.addActionListener( (ActionEvent ae )->{ NumberUp nu = ( NumberUp )pagesPerSide.getSelectedItem();
                         if ( nu != null && nu.getValue() == 1 )
                         {
                             pageOrdering.setEnabled( false );
-                        }
-                    }
-                }
-            );
-            paperSize.addActionListener( new ActionListener()
-            {
-
-                    public void actionPerformed( ActionEvent ae )
-                    {
-                        PageSetupPanel.this.setDefaultMargins();
-                    }
-                }
-            );
-            orientation.addActionListener( new ActionListener()
-            {
-
-                    public void actionPerformed( ActionEvent ae )
-                    {
-                        PageSetupPanel.this.setDefaultMargins();
-                    }
-                }
-            );
+                        }});
+            paperSize.addActionListener( (ActionEvent ae )->{ PageSetupPanel.this.setDefaultMargins();
+                    });
+            orientation.addActionListener( (ActionEvent ae )->{ PageSetupPanel.this.setDefaultMargins();
+                    });
             
             
         }
@@ -1645,15 +1577,8 @@ public class PrinterDialog extends JDialog implements ListSelectionListener
             add( content, BorderLayout.NORTH );
 
             // add listeners
-            atButton.addActionListener( new ActionListener()
-            {
-
-                    public void actionPerformed( ActionEvent ae )
-                    {
-                        when.setEnabled( atButton.isSelected() );
-                    }
-                }
-            );
+            atButton.addActionListener( (ActionEvent ae )->{ when.setEnabled( atButton.isSelected() );
+                    });
             
         }
 

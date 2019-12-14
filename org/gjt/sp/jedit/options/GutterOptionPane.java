@@ -97,13 +97,8 @@ public class GutterOptionPane extends AbstractOptionPane
 		addComponent(gutterComponents);
 		// Disable gutter components when 'show gutter' is unchecked
 		setGutterComponentsEnabledState();
-		gutterEnabled.addChangeListener(new ChangeListener()
-		{
-			public void stateChanged(ChangeEvent e)
-			{
-				setGutterComponentsEnabledState();
-			}
-		});
+		gutterEnabled.addChangeListener((ChangeEvent e)->{ setGutterComponentsEnabledState();
+			});
 
 		/* Selection area background color */
 		addComponent(jEdit.getProperty("options.gutter.selectionAreaBgColor"),

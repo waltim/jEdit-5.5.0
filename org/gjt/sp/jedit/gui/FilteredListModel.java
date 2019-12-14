@@ -105,11 +105,7 @@ public abstract class FilteredListModel<E extends ListModel<?>> extends Abstract
 	//{{{ setFilter() method
 	public void setFilter(@Nullable final String filter)
 	{
-		Runnable runner = new Runnable()
-		{
-			public void run()
-			{
-				Set<Integer> selectedIndices = saveSelection();
+		Runnable runner = ()-> { Set<Integer> selectedIndices = saveSelection();
 				list.clearSelection();
 				FilteredListModel.this.filter = filter;
 				if (filter != null && !filter.isEmpty())
@@ -135,9 +131,7 @@ public abstract class FilteredListModel<E extends ListModel<?>> extends Abstract
 					resetFilter();
 
 				fireContentsChanged(FilteredListModel.this, 0, getSize() - 1);
-				restoreSelection(selectedIndices);
-			}
-		};
+				restoreSelection(selectedIndices);};
 		SwingUtilities.invokeLater(runner);
 	} //}}}
 

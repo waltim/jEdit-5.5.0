@@ -56,13 +56,8 @@ public class AboutDialog extends JDialog implements ActionListener
 		closeBtn.addActionListener(this);
 		getRootPane().setDefaultButton(closeBtn);
 		closeBtn.setToolTipText(jEdit.getProperty("about.navigate"));
-		closeBtn.addKeyListener(new KeyAdapter()
-		{
-			public void keyPressed(KeyEvent e)
-			{
-				aboutPanel.handleKeyEvent(e);
-			}
-		});
+		closeBtn.addKeyListener((KeyEvent e)->{ aboutPanel.handleKeyEvent(e);
+			});
 
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));

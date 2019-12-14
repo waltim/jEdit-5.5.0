@@ -147,14 +147,8 @@ public class PrintPreview extends EnhancedDialog
 
 	private void installListeners()
 	{
-		cancelButton.addActionListener( new ActionListener()
-		{
-
-				public void actionPerformed( ActionEvent ae )
-				{
-					PrintPreview.this.cancel();
-				}
-			} );
+		cancelButton.addActionListener( (ActionEvent ae )->{ PrintPreview.this.cancel();
+				});
 		
 		// as suggested by Alan, set the keystrokes so that up, down, left, right,
 		// and page up and down go to the next or previous page as appropriate.
@@ -171,13 +165,7 @@ public class PrintPreview extends EnhancedDialog
 		pages.getInputMap( JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT ).put( KeyStroke.getKeyStroke( KeyEvent.VK_PAGE_UP, 0, false ), "none" );
 		
 		// then handle the keystrokes:
-		pages.addKeyListener( new KeyAdapter()
-		{
-
-				public void keyPressed( KeyEvent ke )
-				{
-
-					int selectedIndex = pages.getSelectedIndex();
+		pages.addKeyListener( (KeyEvent ke )->{ int selectedIndex = pages.getSelectedIndex();
 					switch ( ke.getKeyCode() )
 					{
 						case KeyEvent.VK_DOWN:
@@ -236,16 +224,9 @@ public class PrintPreview extends EnhancedDialog
 					model.setPageRanges( pageRanges );
 					model.setZoomLevel( zoomLevel );
 					attributes.add( new PageRanges( selectedPage ) );
-					printPreviewPane.setModel( model );
-				}
-			}
-		);
+					printPreviewPane.setModel( model );});
 		
-		pages.addActionListener(new ActionListener()
-			{
-				public void actionPerformed(ActionEvent me)
-				{
-					if (model != null) 
+		pages.addActionListener((ActionEvent me)->{ if (model != null) 
 					{
 						int selectedPage = ( Integer )pages.getSelectedItem();
 						model.setPageNumber( selectedPage - 1 );
@@ -254,15 +235,9 @@ public class PrintPreview extends EnhancedDialog
 						attributes.add( new PageRanges( selectedPage ) );
 						printPreviewPane.setModel( model );
 					}
-				}
-			});
+				});
 
-		prevPage.addActionListener( new ActionListener()
-		{
-
-				public void actionPerformed( ActionEvent ae )
-				{
-					int selectedIndex = pages.getSelectedIndex();
+		prevPage.addActionListener( (ActionEvent ae )->{ int selectedIndex = pages.getSelectedIndex();
 					if ( selectedIndex <= 0 )
 					{
 						selectedIndex = pages.getItemCount() - 1;
@@ -279,16 +254,8 @@ public class PrintPreview extends EnhancedDialog
 					model.setPageRanges( pageRanges );
 					model.setZoomLevel( zoomLevel );
 					attributes.add( new PageRanges( selectedPage ) );
-					printPreviewPane.setModel( model );
-				}
-			}
-		);
-		nextPage.addActionListener( new ActionListener()
-		{
-
-				public void actionPerformed( ActionEvent ae )
-				{
-					int selectedIndex = pages.getSelectedIndex();
+					printPreviewPane.setModel( model );});
+		nextPage.addActionListener( (ActionEvent ae )->{ int selectedIndex = pages.getSelectedIndex();
 					if ( selectedIndex + 1 == pages.getItemCount() )
 					{
 						selectedIndex = 0;
@@ -305,32 +272,16 @@ public class PrintPreview extends EnhancedDialog
 					model.setPageRanges( pageRanges );
 					model.setZoomLevel( zoomLevel );
 					attributes.add( new PageRanges( selectedPage ) );
-					printPreviewPane.setModel( model );
-				}
-			}
-		);
-		zoomIn.addActionListener( new ActionListener()
-		{
-
-				public void actionPerformed( ActionEvent ae )
-				{
-					zoomLevel += 0.1f;
+					printPreviewPane.setModel( model );});
+		zoomIn.addActionListener( (ActionEvent ae )->{ zoomLevel += 0.1f;
 					int selectedPage = ( Integer )pages.getSelectedItem();
 					model.setZoomLevel( zoomLevel );
 					model.setPageNumber( selectedPage - 1 );
 					model.setPageRanges( pageRanges );
 					model.setZoom( PrintPreviewModel.Zoom.IN );
 					attributes.add( new PageRanges( selectedPage ) );
-					printPreviewPane.setModel( model );
-				}
-			}
-		);
-		zoomOut.addActionListener( new ActionListener()
-		{
-
-				public void actionPerformed( ActionEvent ae )
-				{
-					zoomLevel -= 0.1f;
+					printPreviewPane.setModel( model );});
+		zoomOut.addActionListener( (ActionEvent ae )->{ zoomLevel -= 0.1f;
 					if ( zoomLevel <= 0.0f )
 					{
 						zoomLevel = 0.1f;
@@ -343,38 +294,19 @@ public class PrintPreview extends EnhancedDialog
 					model.setPageRanges( pageRanges );
 					model.setZoom( PrintPreviewModel.Zoom.OUT );
 					attributes.add( new PageRanges( selectedPage ) );
-					printPreviewPane.setModel( model );
-				}
-			}
-		);
-		fullWidth.addActionListener( new ActionListener()
-		{
-
-				public void actionPerformed( ActionEvent ae )
-				{
-					int selectedPage = ( Integer )pages.getSelectedItem();
+					printPreviewPane.setModel( model );});
+		fullWidth.addActionListener( (ActionEvent ae )->{ int selectedPage = ( Integer )pages.getSelectedItem();
 					model.setPageNumber( selectedPage );
 					model.setPageRanges( pageRanges );
 					model.setZoom( PrintPreviewModel.Zoom.WIDTH );
 					attributes.add( new PageRanges( selectedPage ) );
-					printPreviewPane.setModel( model );
-				}
-			}
-		);
-		fullPage.addActionListener( new ActionListener()
-		{
-
-				public void actionPerformed( ActionEvent ae )
-				{
-					int selectedPage = ( Integer )pages.getSelectedItem();
+					printPreviewPane.setModel( model );});
+		fullPage.addActionListener( (ActionEvent ae )->{ int selectedPage = ( Integer )pages.getSelectedItem();
 					model.setPageNumber( selectedPage );
 					model.setPageRanges( pageRanges );
 					model.setZoom( PrintPreviewModel.Zoom.PAGE );
 					attributes.add( new PageRanges( selectedPage ) );
-					printPreviewPane.setModel( model );
-				}
-			}
-		);
+					printPreviewPane.setModel( model );});
 	}
 	
 
