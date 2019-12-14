@@ -198,157 +198,142 @@ public class PrinterDialog extends JDialog implements ListSelectionListener
 
     private ActionListener getPreviewButtonListener()
     {
-        return new ActionListener()
-        {
+        return ae -> {
 
-            public void actionPerformed( ActionEvent ae )
+            // check margins and so on
+            String checkMarginsMessage = pageSetupPanel.recalculate();
+            if ( checkMarginsMessage != null )
             {
-
-                // check margins and so on
-                String checkMarginsMessage = pageSetupPanel.recalculate();
-                if ( checkMarginsMessage != null )
-                {
-                    JOptionPane.showMessageDialog( PrinterDialog.this, checkMarginsMessage, jEdit.getProperty( "print-error.title" ), JOptionPane.ERROR_MESSAGE );
-                    return;
-                }
-
-
-                // gather all the attributes from the tabs
-                for ( int i = 0; i < tabs.getTabCount(); i++ )
-                {
-                    PrinterPanel panel = ( PrinterPanel )tabs.getComponentAt( i );
-                    AttributeSet panelAttributes = panel.getAttributes();
-                    if (panelAttributes != null)
-                    {
-                        PrinterDialog.this.attributes.addAll( panelAttributes );
-                    }
-                }
-
-                // adjust the print range to filter based on odd/even pages
-                PageRanges pr = ( PageRanges )PrinterDialog.this.attributes.get( PageRanges.class );
-                try
-                {
-                    PageRanges mergedRanges = mergeRanges( pr );
-                    if (mergedRanges != null) 
-                    {
-                        PrinterDialog.this.attributes.add( mergedRanges );
-                    }
-                }
-                catch ( PrintException e )
-                {
-                    e.printStackTrace();
-                    JOptionPane.showMessageDialog( PrinterDialog.this, jEdit.getProperty( "print-error.message", new String[] {e.getMessage()} ), jEdit.getProperty( "print-error.title" ), JOptionPane.ERROR_MESSAGE );
-                    return;
-                }
-
-                new PrintPreview( view, view.getBuffer(), PrinterDialog.this.getPrintService(), PrinterDialog.this.attributes );
+                JOptionPane.showMessageDialog( PrinterDialog.this, checkMarginsMessage, jEdit.getProperty( "print-error.title" ), JOptionPane.ERROR_MESSAGE );
+                return;
             }
+
+
+            // gather all the attributes from the tabs
+            for ( int i = 0; i < tabs.getTabCount(); i++ )
+            {
+                PrinterPanel panel = ( PrinterPanel )tabs.getComponentAt( i );
+                AttributeSet panelAttributes = panel.getAttributes();
+                if (panelAttributes != null)
+                {
+                    PrinterDialog.this.attributes.addAll( panelAttributes );
+                }
+            }
+
+            // adjust the print range to filter based on odd/even pages
+            PageRanges pr = ( PageRanges )PrinterDialog.this.attributes.get( PageRanges.class );
+            try
+            {
+                PageRanges mergedRanges = mergeRanges( pr );
+                if (mergedRanges != null)
+                {
+                    PrinterDialog.this.attributes.add( mergedRanges );
+                }
+            }
+            catch ( PrintException e )
+            {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog( PrinterDialog.this, jEdit.getProperty( "print-error.message", new String[] {e.getMessage()} ), jEdit.getProperty( "print-error.title" ), JOptionPane.ERROR_MESSAGE );
+                return;
+            }
+
+            new PrintPreview( view, view.getBuffer(), PrinterDialog.this.getPrintService(), PrinterDialog.this.attributes );
         };
     }
 
 
     private ActionListener getOkButtonListener()
     {
-        return new ActionListener()
-        {
+        return ae -> {
 
-            public void actionPerformed( ActionEvent ae )
+            // check margins and so on
+            String checkMarginsMessage = pageSetupPanel.recalculate();
+            if ( checkMarginsMessage != null )
+            {
+                JOptionPane.showMessageDialog( PrinterDialog.this, checkMarginsMessage, jEdit.getProperty( "print-error.title" ), JOptionPane.ERROR_MESSAGE );
+                return;
+            }
+
+
+            // gather all the attributes from the tabs
+            for ( int i = 0; i < tabs.getTabCount(); i++ )
+            {
+                PrinterPanel panel = ( PrinterPanel )tabs.getComponentAt( i );
+                AttributeSet panelAttributes = panel.getAttributes();
+                if (panelAttributes != null)
+                {
+                    PrinterDialog.this.attributes.addAll( panelAttributes );
+                }
+            }
+
+            // adjust the print range to filter based on odd/even pages
+            PageRanges pr = ( PageRanges )PrinterDialog.this.attributes.get( PageRanges.class );
+            try
+            {
+                PageRanges mergedRanges = mergeRanges( pr );
+                if (mergedRanges != null)
+                {
+                    PrinterDialog.this.attributes.add( mergedRanges );
+                }
+            }
+            catch ( PrintException e )
+            {
+                e.printStackTrace();
+                JOptionPane.showMessageDialog( PrinterDialog.this, jEdit.getProperty( "print-error.message", new String[] {e.getMessage()} ), jEdit.getProperty( "print-error.title" ), JOptionPane.ERROR_MESSAGE );
+                return;
+            }
+
+            // if printing to a file, get the filename to use
+            if ( !pageSetupOnly && getPrintService() instanceof StreamPrintService )
             {
 
-                // check margins and so on
-                String checkMarginsMessage = pageSetupPanel.recalculate();
-                if ( checkMarginsMessage != null )
+                // create default filename
+                String filename = "out";
+                if ( jobName != null )
                 {
-                    JOptionPane.showMessageDialog( PrinterDialog.this, checkMarginsMessage, jEdit.getProperty( "print-error.title" ), JOptionPane.ERROR_MESSAGE );
+                    File f = new File( jobName );
+                    filename = f.getName();
+                }
+
+
+                filename = new StringBuilder( filename ).append( ".ps" ).toString();
+
+                File initialFile = new File( System.getProperty( "user.home" ), filename );
+
+                // show file chooser
+                String[] files = GUIUtilities.showVFSFileDialog( PrinterDialog.this, view, initialFile.getAbsolutePath(), VFSBrowser.SAVE_DIALOG, false );
+                if ( files != null && files.length > 0 )
+                {
+                    File file = new File( files[0] );
+                    selectedPrintService = getPostscriptPrintService( file );
+                }
+                else
+                {
                     return;
                 }
-
-
-                // gather all the attributes from the tabs
-                for ( int i = 0; i < tabs.getTabCount(); i++ )
-                {
-                    PrinterPanel panel = ( PrinterPanel )tabs.getComponentAt( i );
-                    AttributeSet panelAttributes = panel.getAttributes();
-                    if (panelAttributes != null)
-                    {
-                        PrinterDialog.this.attributes.addAll( panelAttributes );
-                    }
-                }
-
-                // adjust the print range to filter based on odd/even pages
-                PageRanges pr = ( PageRanges )PrinterDialog.this.attributes.get( PageRanges.class );
-                try
-                {
-                    PageRanges mergedRanges = mergeRanges( pr );
-                    if (mergedRanges != null) 
-                    {
-                        PrinterDialog.this.attributes.add( mergedRanges );
-                    }
-                }
-                catch ( PrintException e )
-                {
-                    e.printStackTrace();
-                    JOptionPane.showMessageDialog( PrinterDialog.this, jEdit.getProperty( "print-error.message", new String[] {e.getMessage()} ), jEdit.getProperty( "print-error.title" ), JOptionPane.ERROR_MESSAGE );
-                    return;
-                }
-
-                // if printing to a file, get the filename to use
-                if ( !pageSetupOnly && getPrintService() instanceof StreamPrintService )
-                {
-
-                    // create default filename
-                    String filename = "out";
-                    if ( jobName != null )
-                    {
-                        File f = new File( jobName );
-                        filename = f.getName();
-                    }
-
-
-                    filename = new StringBuilder( filename ).append( ".ps" ).toString();
-
-                    File initialFile = new File( System.getProperty( "user.home" ), filename );
-
-                    // show file chooser
-                    String[] files = GUIUtilities.showVFSFileDialog( PrinterDialog.this, view, initialFile.getAbsolutePath(), VFSBrowser.SAVE_DIALOG, false );
-                    if ( files != null && files.length > 0 )
-                    {
-                        File file = new File( files[0] );
-                        selectedPrintService = getPostscriptPrintService( file );
-                    }
-                    else
-                    {
-                        return;
-                    }
-                }
-
-
-                // for debugging
-                /*
-                 * Attribute[] attrs = PrinterDialog.this.attributes.toArray();
-                 * for ( Attribute a : attrs )
-                 * {
-                 * Log.log( Log.DEBUG, this, "+++++ after: " + a.getName() + " = " + a );
-                 * }
-                 */
-                PrinterDialog.this.setVisible( false );
-                PrinterDialog.this.dispose();
             }
+
+
+            // for debugging
+            /*
+             * Attribute[] attrs = PrinterDialog.this.attributes.toArray();
+             * for ( Attribute a : attrs )
+             * {
+             * Log.log( Log.DEBUG, this, "+++++ after: " + a.getName() + " = " + a );
+             * }
+             */
+            PrinterDialog.this.setVisible( false );
+            PrinterDialog.this.dispose();
         };
     }
 
 
     private ActionListener getCancelButtonListener()
     {
-        return new ActionListener()
-        {
-
-            public void actionPerformed( ActionEvent ae )
-            {
-                PrinterDialog.this.setVisible( false );
-                PrinterDialog.this.dispose();
-                canceled = true;
-            }
+        return ae -> {
+            PrinterDialog.this.setVisible( false );
+            PrinterDialog.this.dispose();
+            canceled = true;
         };
     }
 
@@ -524,14 +509,7 @@ public class PrinterDialog extends JDialog implements ListSelectionListener
             }
         }
         MediaSizeName[] sizes = sizeNames.toArray( new MediaSizeName [sizeNames.size()]  );
-        Arrays.sort( sizes, new Comparator<MediaSizeName>()
-        {
-
-            public int compare( MediaSizeName a, MediaSizeName b )
-            {
-                return a.toString().compareTo( b.toString() );
-            }
-        } );
+        Arrays.sort( sizes, (a, b) -> a.toString().compareTo( b.toString() ));
         Media previousPaper = ( Media )attributes.get( Media.class );
         MediaSizeName previousSize = null;
         if ( previousPaper instanceof MediaSizeName )
@@ -623,28 +601,23 @@ public class PrinterDialog extends JDialog implements ListSelectionListener
             else
             {
                 NumberUp[] numberUp = ( NumberUp[] )value;
-                Arrays.sort( numberUp, new Comparator<NumberUp>()
-                {
-    
-                    public int compare( NumberUp a, NumberUp b )
+                Arrays.sort( numberUp, (a, b) -> {
+                    int m = a.getValue();
+                    int n = b.getValue();
+                    if ( m < n )
                     {
-                        int m = a.getValue();
-                        int n = b.getValue();
-                        if ( m < n )
-                        {
-                            return -1;
-                        }
-                        else
-                        if ( m == n )
-                        {
-                            return 0;
-                        }
-                        else
-                        {
-                            return 1;
-                        }
+                        return -1;
                     }
-                } );
+                    else
+                    if ( m == n )
+                    {
+                        return 0;
+                    }
+                    else
+                    {
+                        return 1;
+                    }
+                });
                 pagesPerSide.setModel( new DefaultComboBoxModel<NumberUp>( numberUp ) );
                 pagesPerSide.setEnabled( true );
             }
@@ -821,35 +794,16 @@ public class PrinterDialog extends JDialog implements ListSelectionListener
             
             // install listeners
             printers.addListSelectionListener( PrinterDialog.this );
-            allPages.addActionListener( new ActionListener()
-            {
-
-                    public void actionPerformed( ActionEvent ae )
-                    {
-                        pagesField.setEnabled( pages.isSelected() );
-                    }
-                }
+            allPages.addActionListener(ae -> pagesField.setEnabled( pages.isSelected() )
             );
-            pages.addActionListener( new ActionListener()
-            {
-
-                    public void actionPerformed( ActionEvent ae )
-                    {
-                        pagesField.setEnabled( pages.isSelected() );
-                    }
-                }
+            pages.addActionListener(ae -> pagesField.setEnabled( pages.isSelected() )
             );
-            copies.addChangeListener( new ChangeListener()
-            {
-
-                    public void stateChanged( ChangeEvent e )
-                    {
-                        JSpinner spinner = ( JSpinner )e.getSource();
-                        int value = ( int )spinner.getValue();
-                        collate.setEnabled( value > 1 );
-                        collate.setSelected( value > 1 );
-                    }
-                } );
+            copies.addChangeListener(e -> {
+                JSpinner spinner = ( JSpinner )e.getSource();
+                int value = ( int )spinner.getValue();
+                collate.setEnabled( value > 1 );
+                collate.setSelected( value > 1 );
+            });
             PrintService defaultPrintService = PrintServiceLookup.lookupDefaultPrintService();
             // choose last used printer first, default printer if no last used, or first
             // item in print service list otherwise
@@ -1112,36 +1066,17 @@ public class PrinterDialog extends JDialog implements ListSelectionListener
             add( content );
             
             // add listeners
-            pagesPerSide.addActionListener( new ActionListener()
-            {
-
-                    public void actionPerformed( ActionEvent ae )
-                    {
-                        NumberUp nu = ( NumberUp )pagesPerSide.getSelectedItem();
-                        if ( nu != null && nu.getValue() == 1 )
-                        {
-                            pageOrdering.setEnabled( false );
-                        }
-                    }
+            pagesPerSide.addActionListener(ae -> {
+                NumberUp nu = ( NumberUp )pagesPerSide.getSelectedItem();
+                if ( nu != null && nu.getValue() == 1 )
+                {
+                    pageOrdering.setEnabled( false );
                 }
+            }
             );
-            paperSize.addActionListener( new ActionListener()
-            {
-
-                    public void actionPerformed( ActionEvent ae )
-                    {
-                        PageSetupPanel.this.setDefaultMargins();
-                    }
-                }
+            paperSize.addActionListener(ae -> PageSetupPanel.this.setDefaultMargins()
             );
-            orientation.addActionListener( new ActionListener()
-            {
-
-                    public void actionPerformed( ActionEvent ae )
-                    {
-                        PageSetupPanel.this.setDefaultMargins();
-                    }
-                }
+            orientation.addActionListener(ae -> PageSetupPanel.this.setDefaultMargins()
             );
             
             
@@ -1645,14 +1580,7 @@ public class PrinterDialog extends JDialog implements ListSelectionListener
             add( content, BorderLayout.NORTH );
 
             // add listeners
-            atButton.addActionListener( new ActionListener()
-            {
-
-                    public void actionPerformed( ActionEvent ae )
-                    {
-                        when.setEnabled( atButton.isSelected() );
-                    }
-                }
+            atButton.addActionListener(ae -> when.setEnabled( atButton.isSelected() )
             );
             
         }

@@ -80,21 +80,16 @@ public abstract class EnhancedTreeCellRenderer extends DefaultTreeCellRenderer
 	{
 		if (!propertyChangeListeners.containsKey(tree))
 		{
-			PropertyChangeListener propertyChangeListener = new PropertyChangeListener()
-			{
-				@Override
-				public void propertyChange(PropertyChangeEvent evt)
-				{
-					if (!(evt.getSource() instanceof JTree))
-						return;
+			PropertyChangeListener propertyChangeListener = evt -> {
+                if (!(evt.getSource() instanceof JTree))
+                    return;
 
-					JTree tree = (JTree) evt.getSource();
-					if (tree.getCellRenderer() == EnhancedTreeCellRenderer.this)
-						tree.setCellRenderer(newInstance());
+                JTree tree1 = (JTree) evt.getSource();
+                if (tree1.getCellRenderer() == EnhancedTreeCellRenderer.this)
+                    tree1.setCellRenderer(newInstance());
 
-					tree.removePropertyChangeListener("UI", propertyChangeListeners.remove(tree));
-				}
-			};
+                tree1.removePropertyChangeListener("UI", propertyChangeListeners.remove(tree1));
+            };
 			tree.addPropertyChangeListener("UI", propertyChangeListener);
 			propertyChangeListeners.put(tree, propertyChangeListener);
 		}

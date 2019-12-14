@@ -1058,14 +1058,7 @@ public class jEdit
 
 		if (getBooleanProperty("systrayicon"))
 		{
-			EventQueue.invokeLater(new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					JTrayIconManager.addTrayIcon();
-				}
-			});
+			EventQueue.invokeLater(() -> JTrayIconManager.addTrayIcon());
 		}
 		else
 		{
@@ -2602,13 +2595,7 @@ public class jEdit
 						// File can be changed into link on disk or vice versa, so update
 						// file-path,buffer key value pair in bufferHash
 						final Buffer b = buffer;
-						Runnable runnable = new Runnable()
-						{
-							public void run()
-							{
-								updateBufferHash(b);
-							}
-						};
+						Runnable runnable = () -> updateBufferHash(b);
 						AwtRunnableQueue.INSTANCE.runAfterIoTasks(runnable);
 					}
 				}
@@ -3346,14 +3333,7 @@ public class jEdit
 
 			if(isStartupDone())
 			{
-				EventQueue.invokeLater(new Runnable()
-				{
-					@Override
-					public void run()
-					{
-						showPluginErrorDialog();
-					}
-				});
+				EventQueue.invokeLater(() -> showPluginErrorDialog());
 			}
 		}
 	} //}}}
@@ -3723,15 +3703,8 @@ public class jEdit
 		Thread.currentThread().setContextClassLoader(new JARClassLoader());
 		// Perhaps if Xerces wasn't slightly brain-damaged, we would
 		// not need this
-		EventQueue.invokeLater(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				Thread.currentThread().setContextClassLoader(
-					new JARClassLoader());
-			}
-		});
+		EventQueue.invokeLater(() -> Thread.currentThread().setContextClassLoader(
+            new JARClassLoader()));
 	} //}}}
 
 	//{{{ getResourceAsUTF8Text() method
@@ -4048,22 +4021,18 @@ public class jEdit
 			try
 			{
 				EventQueue.invokeAndWait(
-					new Runnable()
-					{
-						public void run()
-						{
-							try
-							{
-								UIManager.setLookAndFeel(sLf);
-							}
-							catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e)
-							{
-								// same as above, there really isn't anything to do and this may be
-								// bogus, the lnf may be from the Look And Feel plugin
-							}
-						}
-					}
-				);
+                        () -> {
+                            try
+                            {
+                                UIManager.setLookAndFeel(sLf);
+                            }
+                            catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException e)
+                            {
+                                // same as above, there really isn't anything to do and this may be
+                                // bogus, the lnf may be from the Look And Feel plugin
+                            }
+                        }
+                );
 			}
 			catch (InterruptedException | InvocationTargetException e)
 			{
@@ -4347,89 +4316,84 @@ public class jEdit
 	private static void finishStartup(final boolean gui, final boolean restore,
 		final boolean newPlainView, final String userDir, final String[] args)
 	{
-		EventQueue.invokeLater(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				int count = getBufferCount();
+		EventQueue.invokeLater(() -> {
+            int count = getBufferCount();
 
-				boolean restoreFiles = restore
-					&& jEdit.getBooleanProperty("restore")
-					&& (count == 0 ||
-					jEdit.getBooleanProperty("restore.cli"));
+            boolean restoreFiles = restore
+                && jEdit.getBooleanProperty("restore")
+                && (count == 0 ||
+                jEdit.getBooleanProperty("restore.cli"));
 
-				if(gui || count != 0)
-				{
-					View view;
-					if (newPlainView)
-						view = newView(null,null,true);
-					else
-						view = PerspectiveManager.loadPerspective(restoreFiles);
+            if(gui || count != 0)
+            {
+                View view;
+                if (newPlainView)
+                    view = newView(null,null,true);
+                else
+                    view = PerspectiveManager.loadPerspective(restoreFiles);
 
-					if(view == null)
-						view = newView(null,null);
+                if(view == null)
+                    view = newView(null,null);
 
-					Buffer buffer;
+                Buffer buffer;
 
-					// Treat the elements of additionalFiles just like command-line arguments
-					if (!additionalFiles.isEmpty())
-					{
-						String[] newArgs = new String[additionalFiles.size() + args.length];
-						additionalFiles.copyInto(newArgs);
-						System.arraycopy(args, 0, newArgs, additionalFiles.size(), args.length);
-						// We need to pass view to openFiles, because when a file is openened via
-						// the command line and is not the current buffer (because other buffers are
-						// already openened) and '+line' command line argument is given, a view is
-						// needed to scroll to the given line.
-						buffer = openFiles(view,userDir,newArgs);
-					}
-					else
-					{
-						// See comment above in if part on passing view.
-						buffer = openFiles(view,userDir,args);
-					}
+                // Treat the elements of additionalFiles just like command-line arguments
+                if (!additionalFiles.isEmpty())
+                {
+                    String[] newArgs = new String[additionalFiles.size() + args.length];
+                    additionalFiles.copyInto(newArgs);
+                    System.arraycopy(args, 0, newArgs, additionalFiles.size(), args.length);
+                    // We need to pass view to openFiles, because when a file is openened via
+                    // the command line and is not the current buffer (because other buffers are
+                    // already openened) and '+line' command line argument is given, a view is
+                    // needed to scroll to the given line.
+                    buffer = openFiles(view,userDir,newArgs);
+                }
+                else
+                {
+                    // See comment above in if part on passing view.
+                    buffer = openFiles(view,userDir,args);
+                }
 
-					if(buffer != null)
-						view.setBuffer(buffer);
-					view.toFront();
-				}
-				else
-				{
-					openFiles(null,userDir,args);
-				}
+                if(buffer != null)
+                    view.setBuffer(buffer);
+                view.toFront();
+            }
+            else
+            {
+                openFiles(null,userDir,args);
+            }
 
-				// Start I/O threads
-				EditBus.send(new EditorStarted(null));
+            // Start I/O threads
+            EditBus.send(new EditorStarted(null));
 
-				VFSManager.start();
+            VFSManager.start();
 
-				// Start edit server
-				if(server != null)
-					server.start();
+            // Start edit server
+            if(server != null)
+                server.start();
 
-				GUIUtilities.hideSplashScreen();
+            GUIUtilities.hideSplashScreen();
 
-				Log.log(Log.MESSAGE,jEdit.class,"Startup "
-					+ "complete: "
-					+ (System.currentTimeMillis() -
-					   startupTime) + " ms");
+            Log.log(Log.MESSAGE,jEdit.class,"Startup "
+                + "complete: "
+                + (System.currentTimeMillis() -
+                   startupTime) + " ms");
 
-				//{{{ Report any plugin errors
-				if(pluginErrors != null)
-				{
-					showPluginErrorDialog();
-				} //}}}
+            //{{{ Report any plugin errors
+            if(pluginErrors != null)
+            {
+                showPluginErrorDialog();
+            } //}}}
 
-				startupDone.set(0, true);
+            startupDone.set(0, true);
 
-				// in one case not a single AWT class will
-				// have been touched (splash screen off +
-				// -nogui -nobackground switches on command
-				// line)
-				Toolkit.getDefaultToolkit();
-			}
-		});
+            // in one case not a single AWT class will
+            // have been touched (splash screen off +
+            // -nogui -nobackground switches on command
+            // line)
+            Toolkit.getDefaultToolkit();
+        });
 	} //}}}
 
 	//{{{ showPluginErrorDialog() method
@@ -4482,67 +4446,62 @@ loop:
 	private static void gotoMarker(final View view, final Buffer buffer,
 		final String marker)
 	{
-		AwtRunnableQueue.INSTANCE.runAfterIoTasks(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				int pos;
+		AwtRunnableQueue.INSTANCE.runAfterIoTasks(() -> {
+            int pos;
 
-				// Handle line number
-				if(marker.startsWith("+line:"))
-				{
-					try
-					{
-						String arg = marker.substring(6);
-						String[] lineCol = arg.split(",");
-						int line, col;
-						if(lineCol.length > 1)
-						{
-							line = Integer.parseInt(lineCol[0]);
-							col = Integer.parseInt(lineCol[1]);
-						}
-						else
-						{
-							line = Integer.parseInt(marker.substring(6));
-							col = 1;
-						}
-						pos = buffer.getLineStartOffset(line - 1) + (col - 1);
-					}
-					catch(Exception e)
-					{
-						return;
-					}
-				}
-				// Handle marker
-				else if(marker.startsWith("+marker:"))
-				{
-					if(marker.length() != 9)
-						return;
+            // Handle line number
+            if(marker.startsWith("+line:"))
+            {
+                try
+                {
+                    String arg = marker.substring(6);
+                    String[] lineCol = arg.split(",");
+                    int line, col;
+                    if(lineCol.length > 1)
+                    {
+                        line = Integer.parseInt(lineCol[0]);
+                        col = Integer.parseInt(lineCol[1]);
+                    }
+                    else
+                    {
+                        line = Integer.parseInt(marker.substring(6));
+                        col = 1;
+                    }
+                    pos = buffer.getLineStartOffset(line - 1) + (col - 1);
+                }
+                catch(Exception e)
+                {
+                    return;
+                }
+            }
+            // Handle marker
+            else if(marker.startsWith("+marker:"))
+            {
+                if(marker.length() != 9)
+                    return;
 
-					Marker m = buffer.getMarker(marker.charAt(8));
-					if(m == null)
-						return;
-					pos = m.getPosition();
-				}
-				// Can't happen
-				else
-					throw new InternalError();
+                Marker m = buffer.getMarker(marker.charAt(8));
+                if(m == null)
+                    return;
+                pos = m.getPosition();
+            }
+            // Can't happen
+            else
+                throw new InternalError();
 
-				if(view != null && view.getBuffer() == buffer)
-				{
-					view.getTextArea().setCaretPosition(pos);
-					buffer.setIntegerProperty(Buffer.CARET,pos);
-					buffer.setBooleanProperty(Buffer.CARET_POSITIONED,true);
-				}
-				else
-				{
-					buffer.setIntegerProperty(Buffer.CARET,pos);
-					buffer.setBooleanProperty(Buffer.CARET_POSITIONED,true);
-					buffer.unsetProperty(Buffer.SCROLL_VERT);
-				}
-			}
-		});
+            if(view != null && view.getBuffer() == buffer)
+            {
+                view.getTextArea().setCaretPosition(pos);
+                buffer.setIntegerProperty(Buffer.CARET,pos);
+                buffer.setBooleanProperty(Buffer.CARET_POSITIONED,true);
+            }
+            else
+            {
+                buffer.setIntegerProperty(Buffer.CARET,pos);
+                buffer.setBooleanProperty(Buffer.CARET_POSITIONED,true);
+                buffer.unsetProperty(Buffer.SCROLL_VERT);
+            }
+        });
 	} //}}}
 
 	//{{{ addBufferToList() method

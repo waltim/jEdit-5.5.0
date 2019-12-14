@@ -156,14 +156,7 @@ public class GenericGUIUtilities {
 			@Override
 			public void windowGainedFocus(WindowEvent evt)
 			{
-				EventQueue.invokeLater(new Runnable()
-				{
-						@Override
-						public void run()
-						{
-							comp.requestFocusInWindow();
-						}
-				});
+				EventQueue.invokeLater(() -> comp.requestFocusInWindow());
 				win.removeWindowFocusListener(this);
 			}
 		});

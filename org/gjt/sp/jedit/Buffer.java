@@ -240,65 +240,61 @@ public class Buffer extends JEditBuffer
 			loadAutosave = false;
 
 		//{{{ Do some stuff once loading is finished
-		Runnable runnable = new Runnable()
-		{
-			public void run()
-			{
-				String newPath = getStringProperty(
-					BufferIORequest.NEW_PATH);
-				Segment seg = (Segment)getProperty(
-					BufferIORequest.LOAD_DATA);
-				IntegerArray endOffsets = (IntegerArray)
-					getProperty(BufferIORequest.END_OFFSETS);
+		Runnable runnable = () -> {
+            String newPath = getStringProperty(
+                BufferIORequest.NEW_PATH);
+            Segment seg = (Segment)getProperty(
+                BufferIORequest.LOAD_DATA);
+            IntegerArray endOffsets = (IntegerArray)
+                getProperty(BufferIORequest.END_OFFSETS);
 
-				loadText(seg,endOffsets);
+            loadText(seg,endOffsets);
 
-				unsetProperty(BufferIORequest.LOAD_DATA);
-				unsetProperty(BufferIORequest.END_OFFSETS);
-				unsetProperty(BufferIORequest.NEW_PATH);
+            unsetProperty(BufferIORequest.LOAD_DATA);
+            unsetProperty(BufferIORequest.END_OFFSETS);
+            unsetProperty(BufferIORequest.NEW_PATH);
 
-				undoMgr.clear();
-				undoMgr.setLimit(jEdit.getIntegerProperty(
-					"buffer.undoCount",100));
+            undoMgr.clear();
+            undoMgr.setLimit(jEdit.getIntegerProperty(
+                "buffer.undoCount",100));
 
-				// If the buffer is temporary, we don't need to
-				// call finishLoading() because it sets the FoldHandler
-				// and reload markers.
-				if (!getFlag(TEMPORARY))
-					finishLoading();
+            // If the buffer is temporary, we don't need to
+            // call finishLoading() because it sets the FoldHandler
+            // and reload markers.
+            if (!getFlag(TEMPORARY))
+                finishLoading();
 
-				setLoading(false);
+            setLoading(false);
 
-				// if reloading a file, clear dirty flag
-				if(reload)
-					setDirty(false);
+            // if reloading a file, clear dirty flag
+            if(reload)
+                setDirty(false);
 
-				if(!loadAutosave && newPath != null)
-					setPath(newPath);
+            if(!loadAutosave && newPath != null)
+                setPath(newPath);
 
-				// if loadAutosave is false, we loaded an
-				// autosave file, so we set 'dirty' to true
+            // if loadAutosave is false, we loaded an
+            // autosave file, so we set 'dirty' to true
 
-				// note that we don't use setDirty(),
-				// because a) that would send an unnecessary
-				// message, b) it would also set the
-				// AUTOSAVE_DIRTY flag, which will make
-				// the autosave thread write out a
-				// redundant autosave file
-				if(loadAutosave)
-					Buffer.super.setDirty(true);
+            // note that we don't use setDirty(),
+            // because a) that would send an unnecessary
+            // message, b) it would also set the
+            // AUTOSAVE_DIRTY flag, which will make
+            // the autosave thread write out a
+            // redundant autosave file
+            if(loadAutosave)
+                Buffer.super.setDirty(true);
 
-				// send some EditBus messages
-				if(!getFlag(TEMPORARY))
-				{
-					fireBufferLoaded();
-					EditBus.send(new BufferUpdate(Buffer.this,
-						view,BufferUpdate.LOADED));
-					//EditBus.send(new BufferUpdate(Buffer.this,
-					//	view,BufferUpdate.MARKERS_CHANGED));
-				}
-			}
-		}; //}}}
+            // send some EditBus messages
+            if(!getFlag(TEMPORARY))
+            {
+                fireBufferLoaded();
+                EditBus.send(new BufferUpdate(Buffer.this,
+                    view,BufferUpdate.LOADED));
+                //EditBus.send(new BufferUpdate(Buffer.this,
+                //	view,BufferUpdate.MARKERS_CHANGED));
+            }
+        }; //}}}
 
 		if(getFlag(TEMPORARY))
 			runnable.run();
@@ -633,18 +629,14 @@ public class Buffer extends JEditBuffer
 		}
 
 		// Once save is complete, do a few other things
-		AwtRunnableQueue.INSTANCE.runAfterIoTasks(new Runnable()
-			{
-				public void run()
-				{
-					setPerformingIO(false);
-					setProperty("overwriteReadonly",null);
-					finishSaving(view,oldPath,oldSymlinkPath,
-						newPath,rename,getBooleanProperty(
-							BufferIORequest.ERROR_OCCURRED));
-					updateMarkersFile(view);
-				}
-			});
+		AwtRunnableQueue.INSTANCE.runAfterIoTasks(() -> {
+            setPerformingIO(false);
+            setProperty("overwriteReadonly",null);
+            finishSaving(view,oldPath,oldSymlinkPath,
+                newPath,rename,getBooleanProperty(
+                    BufferIORequest.ERROR_OCCURRED));
+            updateMarkersFile(view);
+        });
 
 		return true;
 	} //}}}
@@ -2044,13 +2036,7 @@ public class Buffer extends JEditBuffer
 
 			// show this message when all I/O requests are
 			// complete
-			AwtRunnableQueue.INSTANCE.runAfterIoTasks(new Runnable()
-			{
-				public void run()
-				{
-					GUIUtilities.message(view,"autosave-loaded",args);
-				}
-			});
+			AwtRunnableQueue.INSTANCE.runAfterIoTasks(() -> GUIUtilities.message(view,"autosave-loaded",args));
 
 			return true;
 		}

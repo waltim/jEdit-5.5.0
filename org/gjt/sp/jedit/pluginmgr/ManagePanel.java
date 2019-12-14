@@ -557,36 +557,31 @@ public class ManagePanel extends JPanel
 			final int columnIndex)
 		{
 			final Entry entry = entries.get(rowIndex);
-			SwingUtilities.invokeLater(new Runnable()
-			{
-				@Override
-				public void run()
+			SwingUtilities.invokeLater(() -> {
+				if(columnIndex == 0)
 				{
-					if(columnIndex == 0)
+					PluginJAR jar = jEdit.getPluginJAR(entry.jar);
+					if(jar == null)
 					{
-						PluginJAR jar = jEdit.getPluginJAR(entry.jar);
-						if(jar == null)
-						{
-							if(value.equals(Boolean.FALSE))
-								return;
+						if(value.equals(Boolean.FALSE))
+							return;
 
-							PluginJAR load = PluginJAR.load(entry.jar, true);
-							if (load == null)
-							{
-								GUIUtilities.error(ManagePanel.this, "plugin-load-error", null);
-							}
-						}
-						else
+						PluginJAR load = PluginJAR.load(entry.jar, true);
+						if (load == null)
 						{
-							if(value.equals(Boolean.TRUE))
-								return;
-
-							unloadPluginJARWithDialog(jar);
+							GUIUtilities.error(ManagePanel.this, "plugin-load-error", null);
 						}
 					}
+					else
+					{
+						if(value.equals(Boolean.TRUE))
+							return;
 
-					update();
+						unloadPluginJARWithDialog(jar);
+					}
 				}
+
+				update();
 			});
 		} //}}}
 

@@ -1786,17 +1786,12 @@ public class PluginJAR
 	//{{{ startPluginLater() method
 	private void startPluginLater()
 	{
-		EventQueue.invokeLater(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				if (!activated)
-					return;
+		EventQueue.invokeLater(() -> {
+            if (!activated)
+                return;
 
-				startPlugin();
-			}
-		});
+            startPlugin();
+        });
 	} //}}}
 
 	//{{{ breakPlugin() method

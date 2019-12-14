@@ -70,22 +70,10 @@ public class DirectoryProvider implements DynamicMenuProvider
 		mi.setIcon(FileCellRenderer.openDirIcon);
 
 		//{{{ ActionListeners
-		ActionListener fileListener = new ActionListener()
-		{
-			public void actionPerformed(ActionEvent evt)
-			{
-				jEdit.openFile(view,evt.getActionCommand());
-			}
-		};
+		ActionListener fileListener = evt -> jEdit.openFile(view,evt.getActionCommand());
 
-		ActionListener dirListener = new ActionListener()
-		{
-			public void actionPerformed(ActionEvent evt)
-			{
-				VFSBrowser.browseDirectory(view,
-					evt.getActionCommand());
-			}
-		}; //}}}
+		ActionListener dirListener = evt -> VFSBrowser.browseDirectory(view,
+            evt.getActionCommand()); //}}}
 
 		mi.addActionListener(dirListener);
 

@@ -211,16 +211,11 @@ public class HelpViewer extends JFrame implements HelpViewerInterface, HelpHisto
 
 		setVisible(true);
 
-		EventQueue.invokeLater(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				splitter.setDividerLocation(jEdit.getIntegerProperty(
-					"helpviewer.splitter",250));
-				viewer.requestFocus();
-			}
-		});
+		EventQueue.invokeLater(() -> {
+            splitter.setDividerLocation(jEdit.getIntegerProperty(
+                "helpviewer.splitter",250));
+            viewer.requestFocus();
+        });
 	} //}}}
 
 	//{{{ gotoURL() method
@@ -457,15 +452,10 @@ public class HelpViewer extends JFrame implements HelpViewerInterface, HelpHisto
 	@Override
 	public void queueTOCReload()
 	{
-		EventQueue.invokeLater(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				queuedTOCReload = false;
-				toc.load();
-			}
-		});
+		EventQueue.invokeLater(() -> {
+            queuedTOCReload = false;
+            toc.load();
+        });
 	} //}}}
 
 	//}}}
@@ -670,13 +660,10 @@ public class HelpViewer extends JFrame implements HelpViewerInterface, HelpHisto
                         {
 							JPopupMenu popup = new JPopupMenu();
 							JMenuItem copy = popup.add(jEdit.getProperty("helpviewer.copy-link.label"));
-							copy.addActionListener(new ActionListener(){
-								public void actionPerformed(ActionEvent e)
-								{
-									StringSelection url = new StringSelection(href);
-									Toolkit.getDefaultToolkit().getSystemClipboard().setContents(url, url);
-								}
-							});
+							copy.addActionListener(e -> {
+                                StringSelection url = new StringSelection(href);
+                                Toolkit.getDefaultToolkit().getSystemClipboard().setContents(url, url);
+                            });
 							popup.show(viewer, me.getX(), me.getY());
                         }
                     }

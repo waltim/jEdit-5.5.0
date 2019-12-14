@@ -71,14 +71,7 @@ public class AppearanceOptionPane extends AbstractOptionPane implements ItemList
 
 		lookAndFeel = new JComboBox<String>(names);
 		lookAndFeel.setSelectedIndex(index);
-		lookAndFeel.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent evt)
-			{
-				updateEnabled();
-			}
-		});
+		lookAndFeel.addActionListener(evt -> updateEnabled());
 		lookAndFeel.addItemListener( this );
 
 		addComponent(jEdit.getProperty("options.appearance.lf"),

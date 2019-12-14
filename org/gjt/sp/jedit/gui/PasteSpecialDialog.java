@@ -100,26 +100,14 @@ public class PasteSpecialDialog extends EnhancedDialog
 				buttons.add(Box.createGlue());
 
 				JButton ok = new JButton(jEdit.getProperty("common.ok"));
-				ok.addActionListener(new ActionListener()
-				{
-						public void actionPerformed(ActionEvent e)
-						{
-								ok();
-						}
-				});
+				ok.addActionListener(e -> ok());
 				getRootPane().setDefaultButton(ok);
 				buttons.add(ok);
 
 				buttons.add(Box.createHorizontalStrut(6));
 
 				JButton cancel = new JButton(jEdit.getProperty("common.cancel"));
-				cancel.addActionListener(new ActionListener()
-				{
-						public void actionPerformed(ActionEvent e)
-						{
-								cancel();
-						}
-				});
+				cancel.addActionListener(e -> cancel());
 				buttons.add(cancel);
 				
 				GenericGUIUtilities.makeSameSize(ok, cancel);

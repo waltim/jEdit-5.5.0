@@ -384,14 +384,7 @@ public class VFSBrowser extends JPanel implements DefaultFocusComponent,
 
 		final String _path = path;
 
-		ThreadUtilities.runInDispatchThread(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				setDirectory(_path);
-			}
-		});
+		ThreadUtilities.runInDispatchThread(() -> setDirectory(_path));
 	} //}}}
 
 	//{{{ focusOnDefaultComponent() method
@@ -889,24 +882,19 @@ public class VFSBrowser extends JPanel implements DefaultFocusComponent,
 		if(!startRequest())
 			return;
 
-		Runnable runnable = new Runnable()
-		{
-			@Override
-			public void run()
+		Runnable runnable = () -> {
+			endRequest();
+			if (selected.length != 0 && selected[0].getType() != VFSFile.FILE)
 			{
-				endRequest();
-				if (selected.length != 0 && selected[0].getType() != VFSFile.FILE)
+				VFSDirectoryEntryTable directoryEntryTable = browserView.getTable();
+				int selectedRow = directoryEntryTable.getSelectedRow();
+				VFSDirectoryEntryTableModel model = (VFSDirectoryEntryTableModel) directoryEntryTable.getModel();
+				VFSDirectoryEntryTableModel.Entry entry = model.files[selectedRow];
+				if (!entry.expanded)
 				{
-					VFSDirectoryEntryTable directoryEntryTable = browserView.getTable();
-					int selectedRow = directoryEntryTable.getSelectedRow();
-					VFSDirectoryEntryTableModel model = (VFSDirectoryEntryTableModel) directoryEntryTable.getModel();
-					VFSDirectoryEntryTableModel.Entry entry = model.files[selectedRow];
-					if (!entry.expanded)
-					{
-						browserView.clearExpansionState();
-						browserView.loadDirectory(entry,entry.dirEntry.getPath(),
-							false);
-					}
+					browserView.clearExpansionState();
+					browserView.loadDirectory(entry,entry.dirEntry.getPath(),
+						false);
 				}
 			}
 		};
@@ -1122,13 +1110,7 @@ public class VFSBrowser extends JPanel implements DefaultFocusComponent,
 		setDirectory(MiscUtilities.getParentOfPath(path));
 		// Do not change this until all VFS Browser tasks are
 		// done in ThreadUtilities
-		AwtRunnableQueue.INSTANCE.runAfterIoTasks(new Runnable()
-		{
-			public void run()
-			{
-				browserView.getTable().selectFile(path);
-			}
-		});
+		AwtRunnableQueue.INSTANCE.runAfterIoTasks(() -> browserView.getTable().selectFile(path));
 	} //}}}
 
 	//{{{ createPluginsMenu() method
@@ -1633,13 +1615,7 @@ check_selected:
 			{
 				// Do not change this until all VFS Browser tasks are
 				// done in ThreadUtilities
-				AwtRunnableQueue.INSTANCE.runAfterIoTasks(new Runnable()
-				{
-					public void run()
-					{
-						maybeReloadRequestRunning = false;
-					}
-				});
+				AwtRunnableQueue.INSTANCE.runAfterIoTasks(() -> maybeReloadRequestRunning = false);
 			}
 		}
 	} //}}}
@@ -1736,14 +1712,7 @@ check_selected:
 		 */
 		private void resetLater()
 		{
-			EventQueue.invokeLater(new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					isProcessingEvent = false;
-				}
-			});
+			EventQueue.invokeLater(() -> isProcessingEvent = false);
 		}
 
 		private boolean isProcessingEvent;

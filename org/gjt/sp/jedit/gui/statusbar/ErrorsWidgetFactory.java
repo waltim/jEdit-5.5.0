@@ -233,14 +233,7 @@ public class ErrorsWidgetFactory implements StatusWidgetFactory
 
 			JPopupMenu menu = new JPopupMenu();
 			JMenuItem copy = new JMenuItem(jEdit.getProperty("copy.label").replace("$",""));
-			copy.addActionListener(new ActionListener()
-			{
-				@Override
-				public void actionPerformed(ActionEvent e)
-				{
-					Registers.copy(textArea, '$');
-				}
-			});
+			copy.addActionListener(e -> Registers.copy(textArea, '$'));
 			menu.add(copy);
 			textArea.setRightClickPopup(menu);
 			textArea.setRightClickPopupEnabled(true);
@@ -252,14 +245,7 @@ public class ErrorsWidgetFactory implements StatusWidgetFactory
 				setThrowable(throwable);
 			}
 			combo = new JComboBox<Throwable>(throwables);
-			combo.addItemListener(new ItemListener()
-			{
-				@Override
-				public void itemStateChanged(ItemEvent e)
-				{
-					setThrowable((Throwable) combo.getSelectedItem());
-				}
-			});
+			combo.addItemListener(e -> setThrowable((Throwable) combo.getSelectedItem()));
 			getContentPane().add(combo, BorderLayout.NORTH);
 			getContentPane().add(new JScrollPane(textArea));
 

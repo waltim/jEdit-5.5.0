@@ -139,15 +139,10 @@ public class ShortcutsOptionPane extends AbstractOptionPane
 		});
 		JButton clearButton = new JButton(jEdit.getProperty(
 				"options.shortcuts.clear.label"));
-		clearButton.addActionListener(new ActionListener()
-		{
-			@Override
-			public void actionPerformed(ActionEvent arg0)
-			{
-				filterTF.setText("");
-				filterTF.requestFocus();
-			}
-		});
+		clearButton.addActionListener(arg0 -> {
+            filterTF.setText("");
+            filterTF.requestFocus();
+        });
 
 		JPanel filterPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		filterPanel.add(new JLabel(jEdit.getProperty("options.shortcuts.filter.label")));

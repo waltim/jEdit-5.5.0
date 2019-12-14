@@ -183,13 +183,7 @@ public class VFSDirectoryEntryTable extends JTable
 		if(entry.dirEntry.getType() == VFSFile.FILE)
 			return;
 
-		Runnable delayedAwtTask = new Runnable()
-		{
-			public void run()
-			{
-				setSelectedRow(row);
-			}
-		};
+		Runnable delayedAwtTask = () -> setSelectedRow(row);
 		if(entry.expanded)
 		{
 			model.collapse(VFSManager.getVFSForPath(

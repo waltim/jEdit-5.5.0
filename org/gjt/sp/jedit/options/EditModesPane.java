@@ -110,41 +110,37 @@ public class EditModesPane extends AbstractOptionPane
 		deleteSelectedButton = new JButton( jEdit.getProperty("options.editing.modes.deleteSelected", "Delete Selected") );	
 		deleteSelectedButton.setEnabled(false);
 		pingPongList.addButton( deleteSelectedButton );
-		deleteSelectedButton.addActionListener( new ActionListener(){
-
-				public void actionPerformed( ActionEvent ae )
-				{
-					List<Mode> modes = pingPongList.getRightSelectedValues();
-					StringBuilder sb = new StringBuilder();
-					sb.append(jEdit.getProperty("options.editing.modes.Delete_these_modes?", "Delete these modes?")).append('\n');
-					for (Mode m : modes) 
-					{
-						if (m.isUserMode())
-							sb.append(m.getName()).append('\n');	
-					}
-					int answer = JOptionPane.showConfirmDialog(jEdit.getActiveView(), sb.toString(), jEdit.getProperty("options.editing.deleteMode.dialog.title", "Confirm Mode Delete"), JOptionPane.WARNING_MESSAGE );
-					if (answer == JOptionPane.YES_OPTION) {
-						for (Mode m : modes)
-						{
-							if (m.isUserMode())
-							{
-								try
-								{
-									ModeProvider.instance.removeMode(m.getName());
-								}
-								catch (IOException e)
-								{
-									JOptionPane.showMessageDialog(jEdit.getActiveView(),
-											jEdit.getProperty("options.editing.deleteMode.dialog.message1") + ' ' + m.getProperty("file") +
-													'\n' + jEdit.getProperty("options.editing.deleteMode.dialog.message2") + ' ' + m.getName());
-								}
-							}
-						}
-						reloadLists(null);
-					}
-				}
-			}
-		);
+		deleteSelectedButton.addActionListener(ae -> {
+            List<Mode> modes1 = pingPongList.getRightSelectedValues();
+            StringBuilder sb = new StringBuilder();
+            sb.append(jEdit.getProperty("options.editing.modes.Delete_these_modes?", "Delete these modes?")).append('\n');
+            for (Mode m : modes1)
+            {
+                if (m.isUserMode())
+                    sb.append(m.getName()).append('\n');
+            }
+            int answer = JOptionPane.showConfirmDialog(jEdit.getActiveView(), sb.toString(), jEdit.getProperty("options.editing.deleteMode.dialog.title", "Confirm Mode Delete"), JOptionPane.WARNING_MESSAGE );
+            if (answer == JOptionPane.YES_OPTION) {
+                for (Mode m : modes1)
+                {
+                    if (m.isUserMode())
+                    {
+                        try
+                        {
+                            ModeProvider.instance.removeMode(m.getName());
+                        }
+                        catch (IOException e)
+                        {
+                            JOptionPane.showMessageDialog(jEdit.getActiveView(),
+                                    jEdit.getProperty("options.editing.deleteMode.dialog.message1") + ' ' + m.getProperty("file") +
+                                            '\n' + jEdit.getProperty("options.editing.deleteMode.dialog.message2") + ' ' + m.getName());
+                        }
+                    }
+                }
+                reloadLists(null);
+            }
+        }
+        );
 		addComponent( pingPongList, BOTH );
 		addSeparator();
 		// add mode panel
